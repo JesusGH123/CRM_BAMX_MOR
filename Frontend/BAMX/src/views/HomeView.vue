@@ -6,6 +6,7 @@ import Donor from '../components/Donor.vue'
   <main>
     <div class="container">
       <h1>Donadores</h1>
+      <button type="button" class="btn btn-warning">Agregar donador</button>
       <table style="width:100%">
         <thead>
           <tr>

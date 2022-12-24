@@ -28,9 +28,19 @@ module.exports.get_donor = (request, response) => {
 
 //Add a new donor
 module.exports.add_donor = (request, response) => {
-  let sql = "CALL CreateDonor(?, ?, ?, ?)"
+  let sql = "CALL CreateDonor(?, ?, ?, ?, ?, ?, ?, ?, ?)"
   connection.query(sql, 
-    [request.query.name, request.query.city, request.query.colony, request.query.organization, request.query.type, request.type.website],
+    [
+      request.query.name,
+      request.query.city,
+      request.query.colony,
+      request.query.organization,
+      request.query.type,
+      request.query.website1,
+      request.query.website2,
+      request.query.category,
+      request.query.cfdi,
+    ],
     (error, results, fields) => {
     if(error) {
       response.send(error)

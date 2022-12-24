@@ -21,10 +21,21 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    }
+    deleteDonor() {
+      try {
+        axios.delete('http://localhost:3000/donor/${donorId}'
+        .then(response => {
+
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
     },
     deleteAlert(){
       this.$swal({
-        title: '¿Estas segur@?',
+        title: '¿Estas seguro(a)?',
         text: "No podrás revertir esto!",
         icon: 'warning',
         showCancelButton: true,
@@ -38,6 +49,7 @@ export default {
             'El registro ha sido borrado.',
             'success'
           )
+          deleteDonor()
         }
       })
     }
