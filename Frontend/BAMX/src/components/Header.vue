@@ -6,7 +6,7 @@
           <nav class="site-navigation text-right ml-auto" role="navigation">
             <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
               <li class="active">
-                <router-link to="/">Inicio</router-link>
+                <router-link to="/home">Inicio</router-link>
               </li>
               <li>
                 <router-link to="/about">Donadores</router-link>
@@ -20,7 +20,7 @@
         </div>
         <div class="col-lg-8">
           <div class="site-logo d-flex justify-content-end">
-            <router-link to="/"><img src="../assets/bamx-logo.png" width="100" height="45"/></router-link>
+            <router-link to="/home"><img src="../assets/bamx-logo.png" width="100" height="45"/></router-link>
           </div>
         </div>
       </div>

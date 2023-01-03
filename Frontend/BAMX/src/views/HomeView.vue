@@ -9,12 +9,14 @@ import Donor from '../components/Donor.vue'
       <table style="width:100%">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Nombre</th>
             <th>Ciudad</th>
+            <th>Colonia</th>
             <th>Organizaci&oacute;n/Gremio</th>
             <th>Tipo de aliado</th>
-            <th>Correo electr&oacute;nico</th>
+            <th>Sitio[s] web</th>
+            <th>Categor&iacute;a</th>
+            <th>CFDI</th>
           </tr>
         </thead>
         <tbody>

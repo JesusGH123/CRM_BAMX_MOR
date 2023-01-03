@@ -65,12 +65,15 @@ export default {
 <template>
   <tr v-for="donor in donors" :key="donor.donor_id">
     <div hidden ></div>
-    <td>{{ donor.donor_id }}</td>
     <td>{{ donor.donor_name }}</td>
     <td>{{ donor.donor_city }}</td>
+    <td>{{ donor.donor_colony }}</td>
     <td>{{ donor.donor_organization }}</td>
     <td>{{ donor.donor_type }}</td>
-    <td>{{ donor.donor_website }}</td>
+    <td>{{ donor.donor_website1 }} <br> {{ donor.donor_website2 }}</td>
+    <td>{{ donor.donor_category }}</td>
+    <td><button class="btn download" :id="donor.donor_id"><img src="../assets/download.png" title="download_img" width="16"></button></td>
+    
     <td>
       <router-link :to="{name: 'edit', params:{id: donor.donor_id}}">
         <button class="btn update" :id="donor.donor_id"><img src="../assets/pencil.png" title="editImage" width="16" height="16"/></button>
@@ -94,5 +97,8 @@ button:hover.update {
 }
 button:hover.delete {
   background-color:rgba(239, 12, 12, 0.25) !important;
+}
+button:hover.download {
+  background-color: rgba(0, 200, 0, 0.25) !important;
 }
 </style>
