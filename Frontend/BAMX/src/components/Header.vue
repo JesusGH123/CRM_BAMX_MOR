@@ -6,16 +6,14 @@
           <nav class="site-navigation text-right ml-auto" role="navigation">
             <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
               <li class="active">
-                <router-link to="/">Home</router-link>
-                <!-- <a href="#" class="nav-link">Home</a> -->
+                <router-link to="/">Inicio</router-link>
               </li>
               <li>
-                <router-link to="/about">Donors</router-link>
-                <!-- <a href="#" class="nav-link">Donors</a> -->
+                <router-link to="/about">Donadores</router-link>
               </li>
               <li>
-                <router-link to="/about">Companies</router-link>
-                <!-- <a href="#" class="nav-link">Companies</a> -->
+                <!-- TODO: Add other links -->
+                <router-link to="/about">Otro</router-link> 
               </li>
             </ul>
           </nav>

@@ -62,7 +62,7 @@ module.exports.delete_donor = (request, response) => {
 
 //Update a specific donor
 module.exports.update_donor = (request, response) => {
-  let sql = "UPDATE Donor SET donor_name = ?, donor_city = ?, donor_colony = ?, donor_organization = ?, donor_type = ?, donor_website = ? WHERE donor_id = ?"
+  let sql = "UPDATE Donor SET donor_name = ?, donor_city = ?, donor_colony = ?, donor_organization = ?, donor_type = ?, donor_website1 = ?, donor_website2 = ?, donor_category = ?, donor_cfdi = ? WHERE donor_id = ?"
   connection.query(sql,
     [request.query.name, request.query.city, request.query.colony, request.query.organization, request.query.type, request.query.website, request.params.id], (error, results, fields) => {
     if(error) {
@@ -70,18 +70,6 @@ module.exports.update_donor = (request, response) => {
     }
     response.json(results)
   })
-}
-
-module.exports.del_donor = (request, response) => {
-    let sql = "DELETE * FROM Donor Where donor_id = ?"
-    connection.query(sql, [request.params.id], (error, results, fields) => {
-      if(error) {
-        response.send(error)
-      }
-      response.json(results)
-    })
-
-  
 }
 
 module.exports.upd_donor = (request, response) => {
