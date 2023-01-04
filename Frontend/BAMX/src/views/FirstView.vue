@@ -3,7 +3,7 @@
 
 <template>
   <main>
-    <div class="container m-5">
+    <div class="container m-5" style="padding-top: 5%;">
       <img class="img_portada" src="../assets/bamx-logo-removebg.png" alt="bamx_logo">
     </div>
     <router-link to="/home" class="btn_home">Ingresar</router-link>

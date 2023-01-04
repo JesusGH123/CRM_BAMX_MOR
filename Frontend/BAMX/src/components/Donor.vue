@@ -72,7 +72,10 @@ export default {
     <td>{{ donor.donor_type }}</td>
     <td>{{ donor.donor_website1 }} <br> {{ donor.donor_website2 }}</td>
     <td>{{ donor.donor_category }}</td>
-    <td><button class="btn download" :id="donor.donor_id"><img src="../assets/download.png" title="download_img" width="16"></button></td>
+    <td>
+      <button v-if="donor.donor_cfdi != NULL" class="btn download" :id="donor.donor_id" @click="descargar(donor.donor_id)"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>
+      <button v-else class="btn download" :id="donor.donor_id" disabled style="border: none"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>
+    </td>
     
     <td>
       <router-link :to="{name: 'edit', params:{id: donor.donor_id}}">
