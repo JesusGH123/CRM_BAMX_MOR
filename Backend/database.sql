@@ -1,4 +1,4 @@
--- "BAMX" database v3.3.0
+-- "BAMX" database v3.3.1
 DROP DATABASE IF EXISTS BAMX;
 CREATE DATABASE BAMX;
 USE BAMX;
@@ -12,18 +12,16 @@ CREATE TABLE Donor(
     donor_organization CHAR(100),
     donor_website1 CHAR(50),
     donor_website2 CHAR(50),
-    donor_category CHAR(25),
     donor_cfdi BLOB,
-    
-    PRIMARY KEY(donor_id),
-    FOREIGN KEY(donor_category) REFERENCES Category(cat_name)
+
+    PRIMARY KEY(donor_id)
 );
 
 DROP TABLE IF EXISTS Product;
 CREATE TABLE Product(
 	product_id INT NOT NULL AUTO_INCREMENT,
 	product_name CHAR(25) NOT NULL,
-    
+
     PRIMARY KEY(product_id)
 );
 
@@ -36,7 +34,7 @@ CREATE TABLE DonorProduct(
     donation_observation CHAR(200),
     product_quantity FLOAT,
     product_unit CHAR(25),
-    
+
     PRIMARY KEY(donation_id),
     FOREIGN KEY(donor_id) REFERENCES Donor(donor_id),
     FOREIGN KEY(product_id) REFERENCES Product(product_id)
@@ -47,7 +45,7 @@ CREATE TABLE DonorMail(
 	mail_id INT NOT NULL AUTO_INCREMENT,
 	donor_id INT NOT NULL,
     donor_mail CHAR(100),
-    
+
     PRIMARY KEY(mail_id),
     FOREIGN KEY(donor_id) REFERENCES Donor(donor_id)
 );
@@ -57,7 +55,7 @@ CREATE TABLE DonorPhone(
 	phone_id INT NOT NULL AUTO_INCREMENT,
 	donor_id INT NOT NULL,
     donor_phone CHAR(15),
-    
+
     PRIMARY KEY(phone_id),
     FOREIGN KEY(donor_id) REFERENCES Donor(donor_id)
 );
@@ -67,7 +65,7 @@ CREATE TABLE DonorType(
 	id INT NOT NULL AUTO_INCREMENT,
 	donor_id INT NOT NULL,
     donor_type INT NOT NULL,
-    
+
     PRIMARY KEY(id),
     FOREIGN KEY(donor_type) REFERENCES Type(type_id)
 );
@@ -75,7 +73,7 @@ CREATE TABLE DonorType(
 DROP TABLE IF EXISTS Unit;
 CREATE TABLE Unit(
 	unit_name CHAR(25) NOT NULL,
-    
+
     PRIMARY KEY(unit_name)
 );
 
@@ -83,7 +81,7 @@ DROP TABLE IF EXISTS Type;
 CREATE TABLE Type(
 	type_id INT NOT NULL AUTO_INCREMENT,
     type_name CHAR(25),
-    
+
     PRIMARY KEY(type_id)
 );
 
@@ -91,14 +89,24 @@ DROP TABLE IF EXISTS Category;
 CREATE TABLE Category(
 	cat_id INT NOT NULL AUTO_INCREMENT,
     cat_name CHAR(25),
-    
+
     PRIMARY KEY(cat_id)
+);
+
+DROP TABLE IF EXISTS DonorCategory;
+CREATE TABLE DonorCategory(
+    donorID INT NOT NULL,
+    categoryID INT NOT NULL,
+
+    FOREIGN KEY (donorID) REFERENCES Donor(donor_id),
+    FOREIGN KEY (categoryID) REFERENCES Category(cat_id),
+    PRIMARY KEY (donorID, categoryID)
 );
 
 -- CRUD Procedures
 
 -- Create a donor
-DROP PROCEDURE CreateDonor
+DROP PROCEDURE CreateDonor;
 DELIMITER //
 CREATE PROCEDURE CreateDonor (
 	donor_name CHAR(50),
@@ -117,7 +125,7 @@ END //
 DELIMITER ;
 
 -- Add data contact to a donor
-DROP PROCEDURE AddPhoneToDonor
+DROP PROCEDURE AddPhoneToDonor;
 DELIMITER //
 CREATE PROCEDURE AddPhoneToDonor(
 	donor_id INT,
@@ -128,7 +136,7 @@ BEGIN
 END //
 DELIMITER ;
 
-DROP PROCEDURE AddMailToDonor
+DROP PROCEDURE AddMailToDonor;
 DELIMITER //
 CREATE PROCEDURE AddMailToDonor(
 	donor_id INT,
@@ -140,13 +148,13 @@ END //
 DELIMITER ;
 
 -- Add products for donators
-DROP PROCEDURE AddProductForDonation
+DROP PROCEDURE AddProductForDonation;
 DELIMITER //
 CREATE PROCEDURE AddProductForDonation(
 	new_product_name CHAR(25)
 )
 BEGIN
-	
+
 	IF NOT EXISTS (SELECT product_name FROM Product WHERE product_name = LOWER(new_product_name)) THEN
 		INSERT INTO Product VALUES (null, LOWER(new_product_name));
 	END IF;
@@ -154,7 +162,7 @@ END //
 DELIMITER ;
 
 -- Add a new unit
-DROP PROCEDURE AddDonationUnit
+DROP PROCEDURE AddDonationUnit;
 DELIMITER //
 CREATE PROCEDURE AddDonationUnit(
 	unit_name CHAR(25)
@@ -167,7 +175,7 @@ END //
 DELIMITER ;
 
 -- Add donation/products for a donor
-DROP PROCEDURE AddDonationToDonor
+DROP PROCEDURE AddDonationToDonor;
 DELIMITER //
 CREATE PROCEDURE AddDonationToDonor(
 	donor_id INT,
@@ -183,7 +191,7 @@ END //
 DELIMITER ;
 
 -- Delete donor from all tables
-DROP PROCEDURE DeleteDonor
+DROP PROCEDURE DeleteDonor;
 DELIMITER //
 CREATE PROCEDURE DeleteDonor(
 	donor_id INT
@@ -205,3 +213,13 @@ DELIMITER ;
 SELECT * FROM Donor;
 SELECT * FROM DonorPhone;
 SELECT * FROM DonorMail;
+
+SELECT * FROM Category;
+SELECT * FROM DonorCategory;
+
+INSERT INTO bamx.donor (donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi) VALUES (1, 'Israel Sanchez', 'Temixco', 'Centro', 'Walmart', 'www.walmart.mx', 'www.soriana.cdmx.gob.mx', null);
+
+INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Casual');
+INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Por temporada');
+INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Recurrente');
+
