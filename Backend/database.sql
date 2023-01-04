@@ -1,4 +1,4 @@
--- "BAMX" database v2.2.0
+-- "BAMX" database v3.3.0
 DROP DATABASE IF EXISTS BAMX;
 CREATE DATABASE BAMX;
 USE BAMX;
@@ -10,10 +10,13 @@ CREATE TABLE Donor(
     donor_city CHAR(50),
     donor_colony CHAR(50),
     donor_organization CHAR(100),
-    donor_type CHAR(100),
-    donor_website CHAR(50),
+    donor_website1 CHAR(50),
+    donor_website2 CHAR(50),
+    donor_category CHAR(25),
+    donor_cfdi BLOB,
     
-    PRIMARY KEY(donor_id)
+    PRIMARY KEY(donor_id),
+    FOREIGN KEY(donor_category) REFERENCES Category(cat_name)
 );
 
 DROP TABLE IF EXISTS Product;
@@ -59,11 +62,37 @@ CREATE TABLE DonorPhone(
     FOREIGN KEY(donor_id) REFERENCES Donor(donor_id)
 );
 
+DROP TABLE IF EXISTS DonorType;
+CREATE TABLE DonorType(
+	id INT NOT NULL AUTO_INCREMENT,
+	donor_id INT NOT NULL,
+    donor_type INT NOT NULL,
+    
+    PRIMARY KEY(id),
+    FOREIGN KEY(donor_type) REFERENCES Type(type_id)
+);
+
 DROP TABLE IF EXISTS Unit;
 CREATE TABLE Unit(
 	unit_name CHAR(25) NOT NULL,
     
     PRIMARY KEY(unit_name)
+);
+
+DROP TABLE IF EXISTS Type;
+CREATE TABLE Type(
+	type_id INT NOT NULL AUTO_INCREMENT,
+    type_name CHAR(25),
+    
+    PRIMARY KEY(type_id)
+);
+
+DROP TABLE IF EXISTS Category;
+CREATE TABLE Category(
+	cat_id INT NOT NULL AUTO_INCREMENT,
+    cat_name CHAR(25),
+    
+    PRIMARY KEY(cat_id)
 );
 
 -- CRUD Procedures
@@ -77,10 +106,13 @@ CREATE PROCEDURE CreateDonor (
     donor_colony CHAR(50),
     donor_organization CHAR(100),
     donor_type CHAR(100),
-    donor_website CHAR(50)
+    donor_website1 CHAR(50),
+    donor_website2 CHAR(50),
+    donor_category CHAR(15),
+    donor_cfdi BLOB
 )
 BEGIN
-	INSERT INTO Donor VALUES(null, donor_name, donor_city, donor_colony, donor_organization, donor_type, donor_website);
+	INSERT INTO Donor VALUES(null, donor_name, donor_city, donor_colony, donor_organization, donor_type, donor_website1, donor_website2, donor_category, donor_cfdi);
 END //
 DELIMITER ;
 
