@@ -21,9 +21,12 @@ export default {
 </script>
 
 <template>
-  <Header v-if="principal"/>
-  <RouterView />
-  <!-- <Footer/> -->
+  <main>
+    <Header v-if="principal"/>
+    <RouterView />
+    <!-- <Footer/> -->
+  </main>
+
 </template>
 
 <style scoped>

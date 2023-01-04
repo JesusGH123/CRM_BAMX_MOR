@@ -44,7 +44,6 @@ a, a:hover {
 .site-navbar{
   width: 100%;
   margin-bottom: 0px;
-  z-index: 1999;
   position: relative;
   top: 0;
   padding: 1rem;

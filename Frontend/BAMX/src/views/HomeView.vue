@@ -3,8 +3,7 @@ import Donor from '../components/Donor.vue'
 import AddDonor from '../components/AddDonor.vue'
 </script>
 
-<template>
-  <main>
+<template>  
     <div class="container">
       <div class="row">
         <div class="col-2 d-flex justify-content-center align-items-center">
@@ -39,7 +38,6 @@ import AddDonor from '../components/AddDonor.vue'
         </tbody>
       </table>
     </div>
-  </main>
 </template>
 
 <style>
