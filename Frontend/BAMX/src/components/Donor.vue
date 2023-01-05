@@ -5,7 +5,9 @@ export default {
     name: "Donors",
     data() {
         return {
-            donors: {}
+            donors: {},
+            categorias: {},
+            types: {}
         };
     },
     mounted() {
@@ -58,20 +60,64 @@ export default {
                 }
             });
         }
+    },
+    computed: {
+      tipos: function(){
+        for (let i = 0; i < this.donors.length; i++) {
+          const element = this.donors[i];
+          console.log(element['donor_id'])
+          let id = element['donor_id']
+          try{
+            axios.get('http://localhost:3000/categories/' + id)
+            .then(response => {
+              this.type = response.data
+            })
+          }
+          catch(error) {
+            console.log(error)
+          }
+        }
+      },
+      categories: function(){
+        for (let i = 0; i < this.donors.length; i++){
+          const element = this.donors[i];
+          // console.log(element['donor_id'])
+          let id = element['donor_id']
+          try{
+            axios.get('http://localhost:3000/types/' + id)
+            .then(response => {
+              this.types = response.data
+            })
+          }
+          catch(error) {
+            console.log(error)
+          }
+        }
+      }
     }
 }
 </script>
 
 <template>
-  <tr v-for="donor in donors" :key="donor.donor_id">
-    <div hidden ></div>
+  <tr v-for="donor in donors" :key="donor.donor_id" >
+    <div hidden></div>
     <td>{{ donor.donor_name }}</td>
     <td>{{ donor.donor_city }}</td>
     <td>{{ donor.donor_colony }}</td>
     <td>{{ donor.donor_organization }}</td>
-    <td>{{ donor.donor_type }}</td>
+    <td> 
+      {{tipos}} 
+      <div v-for="(types, i) in type" :key="i">
+        {{types.cat_name}}
+      </div>
+    </td>
     <td>{{ donor.donor_website1 }} <br> {{ donor.donor_website2 }}</td>
-    <td>{{ donor.donor_category }}</td>
+    <td>
+      {{categories}}
+      <div v-for="(types, i) in types" :key="i">
+        {{types.type_name}}
+      </div>
+    </td>
     <td>
       <button v-if="donor.donor_cfdi != NULL" class="btn download" :id="donor.donor_id" @click="descargar(donor.donor_id)"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>
       <button v-else class="btn download" :id="donor.donor_id" disabled style="border: none"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>

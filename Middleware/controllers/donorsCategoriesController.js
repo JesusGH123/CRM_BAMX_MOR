@@ -17,8 +17,9 @@ module.exports.get_categories = (request, response) => {
 
 //Get category for a specific donor
 module.exports.get_category = (request, response) => {
-    let sql = "SELECT cat_name FROM Category WHERE cat_id = (SELECT category_id FROM DonorCategory WHERE donor_id = ?)";
-    connection.query(sql, (error, results, fields) => {
+    // let sql = "SELECT cat_name FROM Category WHERE cat_id = (SELECT category_id FROM DonorCategory WHERE donor_id = ?)";
+    let sql = "SELECT cat_name FROM Category WHERE cat_id IN (SELECT category_id FROM DonorCategory WHERE donor_id = ?)";
+    connection.query(sql, [request.params.id], (error, results, fields) => {
         if(error) {
             response.send(error)
         }

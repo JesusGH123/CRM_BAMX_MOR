@@ -7,7 +7,7 @@ let connection = mysql.createConnection(config)
 
 //Get all types
 module.exports.get_types = (request, response) => {
-    let sql = "SELECT type_name FROM Type";
+    let sql = "SELECT * FROM Type";
     connection.query(sql, (error, results, fields) => {
         if(error) {
             response.send(error)
@@ -18,7 +18,7 @@ module.exports.get_types = (request, response) => {
 
 //Get types for a specific donor
 module.exports.get_donor_types = (request, response) => {
-    let sql = "SELECT type_name FROM Type WHERE type_id = (SELECT donor_type WHERE donor_id = ?)";
+    let sql = "SELECT type_name FROM Type WHERE type_id = (SELECT type_id FROM DonorType WHERE donor_id = ?)";
     connection.query(sql, request.params.id, (error, results, fields) => {
         if(error) {
             response.send(error)

@@ -1,4 +1,4 @@
--- "BAMX" database v3.3.1
+-- "BAMX" database v3.3.0
 DROP DATABASE IF EXISTS BAMX;
 CREATE DATABASE BAMX;
 USE BAMX;
@@ -62,12 +62,12 @@ CREATE TABLE DonorPhone(
 
 DROP TABLE IF EXISTS DonorType;
 CREATE TABLE DonorType(
-	id INT NOT NULL AUTO_INCREMENT,
 	donor_id INT NOT NULL,
-    donor_type INT NOT NULL,
+    type_id INT NOT NULL,
 
-    PRIMARY KEY(id),
-    FOREIGN KEY(donor_type) REFERENCES Type(type_id)
+    PRIMARY KEY(donor_id, type_id),
+    FOREIGN KEY(donor_id) REFERENCES Donor(donor_id),
+    FOREIGN KEY(type_id)  REFERENCES Type(type_id)
 );
 
 DROP TABLE IF EXISTS Unit;
@@ -95,12 +95,12 @@ CREATE TABLE Category(
 
 DROP TABLE IF EXISTS DonorCategory;
 CREATE TABLE DonorCategory(
-    donorID INT NOT NULL,
-    categoryID INT NOT NULL,
+    donor_id INT NOT NULL,
+    category_id INT NOT NULL,
 
-    FOREIGN KEY (donorID) REFERENCES Donor(donor_id),
-    FOREIGN KEY (categoryID) REFERENCES Category(cat_id),
-    PRIMARY KEY (donorID, categoryID)
+    FOREIGN KEY (donor_id) REFERENCES Donor(donor_id),
+    FOREIGN KEY (category_id) REFERENCES Category(cat_id),
+    PRIMARY KEY (donor_id, category_id)
 );
 
 -- CRUD Procedures
@@ -113,14 +113,12 @@ CREATE PROCEDURE CreateDonor (
     donor_city CHAR(50),
     donor_colony CHAR(50),
     donor_organization CHAR(100),
-    donor_type CHAR(100),
     donor_website1 CHAR(50),
     donor_website2 CHAR(50),
-    donor_category CHAR(15),
     donor_cfdi BLOB
 )
 BEGIN
-	INSERT INTO Donor VALUES(null, donor_name, donor_city, donor_colony, donor_organization, donor_type, donor_website1, donor_website2, donor_category, donor_cfdi);
+	INSERT INTO Donor VALUES(null, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi);
 END //
 DELIMITER ;
 
@@ -217,9 +215,12 @@ SELECT * FROM DonorMail;
 SELECT * FROM Category;
 SELECT * FROM DonorCategory;
 
-INSERT INTO bamx.donor (donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi) VALUES (1, 'Israel Sanchez', 'Temixco', 'Centro', 'Walmart', 'www.walmart.mx', 'www.soriana.cdmx.gob.mx', null);
+SELECT * FROM Type;
+SELECT * FROM DonorType;
+
+INSERT INTO bamx.donor (donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi) VALUES (0, 'Israel Sanchez', 'Temixco', 'Centro', 'Walmart', 'www.walmart.mx', 'www.soriana.cdmx.gob.mx', null);
 
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Casual');
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Por temporada');
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Recurrente');
-
+INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Compra');

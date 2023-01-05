@@ -25,7 +25,7 @@ export default {
   <div class="row">
     <div class="col">
       <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="municipalitiesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn dropdown-toggle" type="button" id="municipalitiesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           Municipio: {{municipio}}
         </button>
         <ul class="dropdown-menu" aria-labelledby="municipalitiesDropdown">
@@ -38,7 +38,7 @@ export default {
     
     <div class="col">
       <div class="dropdown">
-        <button v-if="this.municipio !== ''" class="btn btn-secondary dropdown-toggle" type="button" id="townsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <button v-if="this.municipio !== ''" class="btn dropdown-toggle" type="button" id="townsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           Colonia: {{colonia}}
         </button>
         <ul v-if="this.municipio !== ''" class="dropdown-menu" aria-labelledby="townsDropdown">
@@ -47,6 +47,11 @@ export default {
           </li>
         </ul>
       </div>    
+    </div>
+
+    <div>
+      <input type="text" name="municipio" id="municipio" :value="this.municipio" hidden>
+      <input type="text" name="colonia" id="colonia" :value="this.colonia" hidden>
     </div>
 
   </div>
