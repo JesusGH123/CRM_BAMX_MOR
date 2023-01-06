@@ -38,6 +38,11 @@ export default{
         }
       }
 
+      for(let i = 0; i < tipo.length; i++){
+        // Convert to json structure "id": "value"
+        tipo[i] = JSON.parse(`{"id": "${tipo[i]}"}`)
+      }
+
       if(nombre === '' || municipio === '' || colonia === '' || organizacion === '' || tipo.length === 0){
         this.$swal({
           title: 'Error',
@@ -47,6 +52,33 @@ export default{
         })
         return
       }
+
+      let web1 = document.getElementById('addDonorWebsite1').value
+      let web2 = document.getElementById('addDonorWebsite2').value
+      let _category = document.querySelector('input[name="categoria"]:checked').value
+      
+      
+
+      if( web1 == null )
+        web1 = ''
+
+      if( web2 == null )
+        web2 = ''
+
+      let data = {
+        name: nombre,
+        city: municipio,
+        colony: colonia,
+        organization: organizacion,
+        website1: web1,
+        website2: web2,
+        cfdi: null,
+        type: tipo,
+        category: _category
+      }
+
+      // CONVERT TO JSON
+      let json = JSON.stringify(data)
       
       this.$swal({
         title: 'Seguro que quieres agregar este donador?',
@@ -58,7 +90,7 @@ export default{
         confirmButtonText: 'Si'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.addDonor()
+          this.addDonor(json)
           this.$swal({
             title: '¡Agregado!',
             text: 'El donador ha sido agregado.',
@@ -72,22 +104,31 @@ export default{
         }
       })
     },
-    addDonor(){
+    addDonor(data){
+      console.log(data)
       try{
-        axios.post('http://localhost:3000/donor',{}, {
-          params: {
-            name: document.getElementById('addDonorName').value,
-            city: document.getElementById('municipio').value,
-            colony: document.getElementById('colonia').value,
-            organization: document.getElementById('addDonorOrganization').value,
-            website1: document.getElementById('addDonorWebsite1').value,
-            website2: document.getElementById('addDonorWebsite2').value,
-            cfdi: null
+        axios.post('http://localhost:3000/donor', data, {
+          headers: {
+            'Content-Type': 'application/json'
           }
         })
         .then(response => {
           console.log(response)
         })
+        // axios.post('http://localhost:3000/donor',{}, {
+        //   params: {
+        //     name: document.getElementById('addDonorName').value,
+        //     city: document.getElementById('municipio').value,
+        //     colony: document.getElementById('colonia').value,
+        //     organization: document.getElementById('addDonorOrganization').value,
+        //     website1: document.getElementById('addDonorWebsite1').value,
+        //     website2: document.getElementById('addDonorWebsite2').value,
+        //     cfdi: null
+        //   }
+        // })
+        // .then(response => {
+        //   console.log(response)
+        // })
       } catch (error) {
         console.log(error)
       }

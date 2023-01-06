@@ -12,8 +12,28 @@ export default {
     },
     mounted() {
         this.getDonors();
+        this.getTypes();
+        this.getCategorias();
     },
     methods: {
+        getCategorias() {
+            axios.get("http://localhost:3000/categories")
+                .then(response => {
+                    this.categorias = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        getTypes() {
+            axios.get("http://localhost:3000/types")
+                .then(response => {
+                    this.types = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
         deleteDonor(idDonor){
             try {
                 axios.delete('http://localhost:3000/donor/' + idDonor)
@@ -60,62 +80,27 @@ export default {
                 }
             });
         }
-    },
-    computed: {
-      tipos: function(){
-        for (let i = 0; i < this.donors.length; i++) {
-          const element = this.donors[i];
-          console.log(element['donor_id'])
-          let id = element['donor_id']
-          try{
-            axios.get('http://localhost:3000/categories/' + id)
-            .then(response => {
-              this.type = response.data
-            })
-          }
-          catch(error) {
-            console.log(error)
-          }
-        }
-      },
-      categories: function(){
-        for (let i = 0; i < this.donors.length; i++){
-          const element = this.donors[i];
-          // console.log(element['donor_id'])
-          let id = element['donor_id']
-          try{
-            axios.get('http://localhost:3000/types/' + id)
-            .then(response => {
-              this.types = response.data
-            })
-          }
-          catch(error) {
-            console.log(error)
-          }
-        }
-      }
     }
 }
 </script>
 
 <template>
-  <tr v-for="donor in donors" :key="donor.donor_id" >
+  <tr v-for="donor in donors" :key="donor.donor_id" class="fila">
     <div hidden></div>
     <td>{{ donor.donor_name }}</td>
     <td>{{ donor.donor_city }}</td>
     <td>{{ donor.donor_colony }}</td>
     <td>{{ donor.donor_organization }}</td>
     <td> 
-      {{tipos}} 
-      <div v-for="(types, i) in type" :key="i">
-        {{types.cat_name}}
+      <div v-for="tipo in types" :key="tipo.type_id">
+        <span v-if="donor.Tipo.includes(tipo.type_id)">{{tipo.type_name}}</span>
       </div>
     </td>
     <td>{{ donor.donor_website1 }} <br> {{ donor.donor_website2 }}</td>
     <td>
-      {{categories}}
-      <div v-for="(types, i) in types" :key="i">
-        {{types.type_name}}
+      <!-- {{ categorias }} -->
+      <div v-for="categoria in categorias" :key="categoria.cat_id">
+        <span v-if="donor.category_id == categoria.cat_id">{{categoria.cat_name}}</span>
       </div>
     </td>
     <td>
@@ -149,5 +134,8 @@ button:hover.delete {
 }
 button:hover.download {
   background-color: rgba(0, 200, 0, 0.25) !important;
+}
+.fila:hover {
+  background-color: rgba(200, 200, 200, 0.5) !important;
 }
 </style>

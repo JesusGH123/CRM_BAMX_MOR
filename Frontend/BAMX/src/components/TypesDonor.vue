@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     getTypes() {
-      axios.get('http://localhost:3000/categories')
+      axios.get('http://localhost:3000/types')
         .then(response => {
           this.tipos = response.data
         })
@@ -38,10 +38,10 @@ export default {
 
 <template>
   <div class="row">
-    <div class="col-6" v-for="tipo in this.tipos" :key="this.tipos.cat_id">
+    <div class="col-6" v-for="tipo in this.tipos" :key="this.tipos.type_id">
         <div class="form-check">
-          <input class="form-check-input type-check" type="checkbox" name="tipo" :id="tipo.cat_id" :value="tipo.cat_id">
-          <label class="form-check-label" :for="tipo.cat_id">{{tipo.cat_name}}</label>
+          <input class="form-check-input type-check" type="checkbox" name="tipo" :id="tipo.type_id" :value="tipo.type_id">
+          <label class="form-check-label" :for="tipo.type_id">{{tipo.type_name}}</label>
         </div>
     </div>
   </div>

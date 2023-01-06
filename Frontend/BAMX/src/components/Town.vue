@@ -29,7 +29,7 @@ export default {
           Municipio: {{municipio}}
         </button>
         <ul class="dropdown-menu" aria-labelledby="municipalitiesDropdown">
-          <li v-for="(municipio, i) in municipalities" :key="i" @click="getTowns(i)">
+          <li class="ciudad" v-for="(municipio, i) in municipalities" :key="i" @click="getTowns(i)">
             {{municipio.Municipio}}
           </li>
         </ul>
@@ -42,7 +42,7 @@ export default {
           Colonia: {{colonia}}
         </button>
         <ul v-if="this.municipio !== ''" class="dropdown-menu" aria-labelledby="townsDropdown">
-          <li v-for="(colonia, i) in colonias" :key="i" @click="this.colonia = colonias[i]">
+          <li class="ciudad" v-for="(colonia, i) in colonias" :key="i" @click="this.colonia = colonias[i]">
             {{colonia}}
           </li>
         </ul>
@@ -58,11 +58,11 @@ export default {
 </template>
 
 <style>
-li {
+.ciudad {
   padding: 0 10px;
   cursor: pointer;
 }
-li:hover {
+.ciudad:hover {
   background-color: #ccc;
 }
 .dropdown-menu {
