@@ -28,7 +28,13 @@ export default{
       let nombre = document.getElementById('addDonorName').value
       let municipio = document.getElementById('municipio').value
       let colonia = document.getElementById('colonia').value
+      if(colonia === 'Otro'){
+        colonia = document.getElementById('otra_colonia').value
+      }
       let organizacion = document.getElementById('addDonorOrganization').value
+
+      // let cfdi = document.getElementById('addDonorCFDI').value
+      // console.log(cfdi)
       
       let tipos = document.getElementsByClassName('type-check')
       var tipo = []
@@ -38,10 +44,31 @@ export default{
         }
       }
 
+      // Convert to json structure "id": "value"
       for(let i = 0; i < tipo.length; i++){
-        // Convert to json structure "id": "value"
         tipo[i] = JSON.parse(`{"id": "${tipo[i]}"}`)
       }
+
+      // TODO: CHECK THIS VALIDATION
+      //  if(nombre === '' && organizacion === ''){
+      //   this.$swal({
+      //     title: 'Error',
+      //     text: 'Al menos debes llenar el nombre o la organización',
+      //     icon: 'error',
+      //     confirmButtonText: 'Ok'
+      //   })
+      //   return
+      // }
+
+      // if(municipio === ''){
+      //   this.$swal({
+      //     title: 'Error',
+      //     text: 'Porfavor, llena los campos obligatorios',
+      //     icon: 'error',
+      //     confirmButtonText: 'Ok'
+      //   })
+      //   return
+      // }
 
       if(nombre === '' || municipio === '' || colonia === '' || organizacion === '' || tipo.length === 0){
         this.$swal({
@@ -56,14 +83,6 @@ export default{
       let web1 = document.getElementById('addDonorWebsite1').value
       let web2 = document.getElementById('addDonorWebsite2').value
       let _category = document.querySelector('input[name="categoria"]:checked').value
-      
-      
-
-      if( web1 == null )
-        web1 = ''
-
-      if( web2 == null )
-        web2 = ''
 
       let data = {
         name: nombre,
@@ -105,7 +124,7 @@ export default{
       })
     },
     addDonor(data){
-      console.log(data)
+      // console.log(data)
       try{
         axios.post('http://localhost:3000/donor', data, {
           headers: {
@@ -115,20 +134,6 @@ export default{
         .then(response => {
           console.log(response)
         })
-        // axios.post('http://localhost:3000/donor',{}, {
-        //   params: {
-        //     name: document.getElementById('addDonorName').value,
-        //     city: document.getElementById('municipio').value,
-        //     colony: document.getElementById('colonia').value,
-        //     organization: document.getElementById('addDonorOrganization').value,
-        //     website1: document.getElementById('addDonorWebsite1').value,
-        //     website2: document.getElementById('addDonorWebsite2').value,
-        //     cfdi: null
-        //   }
-        // })
-        // .then(response => {
-        //   console.log(response)
-        // })
       } catch (error) {
         console.log(error)
       }
@@ -165,7 +170,7 @@ export default{
           <div class="row d-flex align-items-center m-2">
             <label class="col-form-label col-sm-2">Ubicaci&oacute;n*</label>
             <div class="col-sm-10">
-              <Town />
+              <Town/>
             </div>
           </div>
           <div class="row d-flex align-items-center m-2">
@@ -196,6 +201,12 @@ export default{
             <label for="addDonorWebsite2" class="col-sm-2">Sitio web 2</label>
             <div class="col-sm-10">
               <input type="text" class="form-control modalInputText" id="addDonorWebsite2" name="donorWebsite2">
+            </div>
+          </div>
+          <div class="row d-flex align-items-center m-2">
+            <label for="addDonorCfdi" class="col-sm-2">CFDI</label>
+            <div class="col-sm-10">
+              <input type="file" class="form-control modalInputText" id="addDonorCfdi" name="donorCfdi" accept=".pdf">
             </div>
           </div>
         </form>

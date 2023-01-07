@@ -48,7 +48,7 @@ export default {
             try {
                 axios.get("http://localhost:3000/")
                     .then(response => {
-                    this.donors = response.data;
+                    this.donors = response.data[0];
                 });
             }
             catch (error) {
@@ -92,7 +92,7 @@ export default {
     <td>{{ donor.donor_colony }}</td>
     <td>{{ donor.donor_organization }}</td>
     <td> 
-      <div v-for="tipo in types" :key="tipo.type_id">
+      <div v-if="donor.Tipo !== null" v-for="tipo in types" :key="tipo.type_id">
         <span v-if="donor.Tipo.includes(tipo.type_id)">{{tipo.type_name}}</span>
       </div>
     </td>

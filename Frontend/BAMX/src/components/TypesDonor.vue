@@ -10,6 +10,9 @@ export default {
       groups: 2
     }
   },
+  props: {
+      type: Array
+  },
   mounted: function() {
     this.getTypes()
   },
@@ -40,7 +43,8 @@ export default {
   <div class="row">
     <div class="col-6" v-for="tipo in this.tipos" :key="this.tipos.type_id">
         <div class="form-check">
-          <input class="form-check-input type-check" type="checkbox" name="tipo" :id="tipo.type_id" :value="tipo.type_id">
+          <input v-if="type !== null && type !== undefined && type.includes(tipo.type_id)" class="form-check-input type-check" type="checkbox" name="tipo" :id="tipo.type_id" :value="tipo.type_id" checked>
+          <input v-else class="form-check-input type-check" type="checkbox" name="tipo" :id="tipo.type_id" :value="tipo.type_id">
           <label class="form-check-label" :for="tipo.type_id">{{tipo.type_name}}</label>
         </div>
     </div>

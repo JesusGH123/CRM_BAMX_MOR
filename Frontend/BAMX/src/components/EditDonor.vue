@@ -1,5 +1,10 @@
 <script>
 import axios from 'axios'
+import Town from './Town.vue'
+import TypesDonor from './TypesDonor.vue'
+import CategoryDonor from './CategoryDonor.vue'
+import Phone from './Phone.vue'
+
 
 export default {
   name: 'Donors',
@@ -8,6 +13,12 @@ export default {
       type: String,
       required: true
     }
+  },
+  components: {
+    Town,
+    TypesDonor,
+    CategoryDonor,
+    Phone
   },
   data() {
     return {
@@ -34,7 +45,7 @@ export default {
       try{
         axios.get('http://localhost:3000/donor/' + this.idDonor)
         .then(response => {
-          this.donors = response.data
+          this.donors = response.data[0]
           // console.log(this.donors)
           // console.log(this.idDonor)
         })
@@ -111,42 +122,37 @@ export default {
             <label for="name" class="form-label">Nombre</label>
             <input class="form-control mb-3" type="text" name="name" id="name" :value="donor.donor_name">
             <label for="city" class="form-label">Ubicacion</label>
-            <input class="form-control mb-3" type="text" name="city" id="city" :value="donor.donor_city">
+            <Town :municipio = donor.donor_city :colonia=donor.donor_colony />
             <label for="gremio" class="form-label">Organizaci&oacute;n / Gremio</label>
             <input class="form-control mb-3" type="text" name="gremio" id="gremio" :value="donor.donor_organization">
-            <label for="tipo" class="form-label">Tipo de aliado</label>
-            <div class="form-check mb-3" name="tipo" id="tipo">
-              <input class="form-check-input" type="checkbox" name="tipo" id="recurrente" value="recurrente" :checked="donor.donor_type == 'Recurrente'">
-              <label class="form-check-label" for="recurrente">Recurrente</label>
-            </div>
-            <div class="form-check mb-3" name="tipo" id="tipo">
-              <input class="form-check-input" type="checkbox" name="tipo" id="temporada" value="temporada" :checked="donor.donor_type == 'Temporada'">
-              <label class="form-check-label" for="temporada">Por temporada</label>
-            </div>
-            <div class="form-check mb-3" name="tipo" id="tipo">
-                <input class="form-check-input" type="checkbox" name="tipo" id="compra" value="compra" :checked="donor.donor_type == 'Compra'">
-                <label class="form-check-label" for="compra">Compra</label>
-            </div>
-            <div class="form-check mb-3" name="tipo" id="tipo">
-              <input class="form-check-input" type="checkbox" name="tipo" id="prospecto" value="prospecto" :checked="donor.donor_type == 'Prospecto'">
-              <label class="form-check-label" for="prospecto">Prospecto</label>
-            </div>
+            <label class="form-label">Tipo de aliado</label>
+            <TypesDonor :type= donor.Tipo />
+            <label class="form-label">Categoria</label>
+            <CategoryDonor :category= donor.Categoria />
           </div>
         </form>
       </div>
       <div class="col-6">
         <h2 class="text-center">Tel&eacute;fonos</h2>
-        <form class="limited-form" method="post">
-          <div v-for= "(phone, index) in phones" :key="phone.phone_id">
-            <label for="phone" class="form-label">Tel&eacute;fono {{index + 1}}</label>
-            <input class="form-control mb-3" type="text" name="phone" id="phone" :value="phone.donor_phone">
-            <button class="btn delete" type="button" name="id" :id="phone.phone_id" @click="deleteAlert(phone.phone_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
+        <span v-for="donor in donors" :key="donor.donor_id">
+          <Phone :idDonor = donor.donor_id />
+        </span>
+      </div>
+    </div>
+    <div class="row d-flex mt-3">
+      <div class="col-6">
+        <h2 class="text-center">Contacto</h2>
+        <form>
+          <div v-for="donor in donors" :key="donor.donor_id">
+            <label for="email" class="form-label">Correo</label>
+            <input class="form-control mb-3" type="email" name="email" id="email" :value="donor.donor_email">
+            <label for="web1">Website 1</label>
+            <input class="form-control mb-3" type="text" name="web1" id="web1" :value="donor.donor_website1">
+            <label for="web2">Website 2</label>
+            <input class="form-control mb-3" type="text" name="web2" id="web2" :value="donor.donor_website2">
           </div>
         </form>
       </div>
-    </div>
-    <div class="row d-flex">
-      <div class="col-6"></div>
       <div class="col-6">
         <h2 class="text-center">Productos</h2>
         <form class="limited-form">

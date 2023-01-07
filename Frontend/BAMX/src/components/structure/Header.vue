@@ -20,7 +20,7 @@
         </div>
         <div class="col-lg-8">
           <div class="site-logo d-flex justify-content-end">
-            <router-link to="/home"><img src="../assets/bamx-logo.png" width="100" height="45"/></router-link>
+            <router-link to="/home"><img src="../../assets/bamx-logo.png" width="100" height="45"/></router-link>
           </div>
         </div>
       </div>

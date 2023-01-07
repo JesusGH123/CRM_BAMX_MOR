@@ -51,7 +51,9 @@ button, input{
   display: inline-block;
 }
 
-input[type=text]{
+input[type=text], 
+input[type=email],
+input[type=number]{
   border-radius: 5px;
   outline: 0;
   border-width: 0 0 2px;
