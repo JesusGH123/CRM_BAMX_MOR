@@ -24,7 +24,10 @@ export default{
       }
     },
     addDonorAlert(){
-      // VALIDATE IF THE FIELDS ARE EMPTY
+      let erroresDiv = document.getElementById('errores')
+      erroresDiv.innerHTML = ''
+      let errores = []
+
       let nombre = document.getElementById('addDonorName').value
       let municipio = document.getElementById('municipio').value
       let colonia = document.getElementById('colonia').value
@@ -49,18 +52,28 @@ export default{
         tipo[i] = JSON.parse(`{"id": "${tipo[i]}"}`)
       }
 
-      // TODO: CHECK THIS VALIDATION
-      //  if(nombre === '' && organizacion === ''){
-      //   this.$swal({
-      //     title: 'Error',
-      //     text: 'Al menos debes llenar el nombre o la organización',
-      //     icon: 'error',
-      //     confirmButtonText: 'Ok'
-      //   })
-      //   return
-      // }
+       if(nombre === '' && organizacion === ''){
+        errores.push('* Al menos debes llenar el nombre u organización')
+      }
+      if(municipio === ''){
+        errores.push('* Debes seleccionar un municipio')
+      }
+      if(errores.length > 0){
+        this.$swal({
+          title: 'Error',
+          text: 'Porfavor, llena los campos obligatorios',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
 
-      // if(municipio === ''){
+        for(let i = 0; i < errores.length; i++){
+          erroresDiv.innerHTML += `<p>${errores[i]}</p>`
+        }
+        return
+      }
+
+
+      // if(nombre === '' || municipio === '' || colonia === '' || organizacion === '' || tipo.length === 0){
       //   this.$swal({
       //     title: 'Error',
       //     text: 'Porfavor, llena los campos obligatorios',
@@ -69,16 +82,6 @@ export default{
       //   })
       //   return
       // }
-
-      if(nombre === '' || municipio === '' || colonia === '' || organizacion === '' || tipo.length === 0){
-        this.$swal({
-          title: 'Error',
-          text: 'Porfavor, llena los campos obligatorios',
-          icon: 'error',
-          confirmButtonText: 'Ok'
-        })
-        return
-      }
 
       let web1 = document.getElementById('addDonorWebsite1').value
       let web2 = document.getElementById('addDonorWebsite2').value
@@ -210,6 +213,7 @@ export default{
             </div>
           </div>
         </form>
+        <div class="errores" id="errores"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
@@ -231,5 +235,8 @@ export default{
 }
 .is-invalid {
   border-color: #dc3545 !important;
+}
+.errores {
+  color:#dc3545;
 }
 </style>

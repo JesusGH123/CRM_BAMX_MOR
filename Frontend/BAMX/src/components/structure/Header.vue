@@ -9,12 +9,12 @@
                 <router-link to="/home">Inicio</router-link>
               </li>
               <li>
-                <router-link to="/about">Donadores</router-link>
+                <router-link to="/about">Productos</router-link>
               </li>
-              <li>
-                <!-- TODO: Add other links -->
+              <!-- <li>
+                TODO: Add other links
                 <router-link to="/about">Otro</router-link> 
-              </li>
+              </li> -->
             </ul>
           </nav>
         </div>

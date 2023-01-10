@@ -172,7 +172,7 @@ export default {
     <div class="row">
         <div class="text-center">
           <button class="btn btn-success m-2" @click="confirmAlert()">Guardar</button>   
-          <router-link to="/">
+          <router-link to="/home">
             <button class="btn btn-danger m-2">Cancelar</button>
           </router-link>       
         </div>
