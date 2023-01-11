@@ -1,4 +1,4 @@
--- "BAMX" database v3.3.2
+-- "BAMX" database v3.5.0
 DROP DATABASE IF EXISTS BAMX;
 CREATE DATABASE BAMX;
 USE BAMX;
@@ -33,11 +33,12 @@ CREATE TABLE DonorProduct(
     donation_date TIMESTAMP,
     donation_observation CHAR(200),
     product_quantity FLOAT,
-    product_unit CHAR(25),
+    unit_id INT,
 
     PRIMARY KEY(donation_id),
     FOREIGN KEY(donor_id) REFERENCES Donor(donor_id),
-    FOREIGN KEY(product_id) REFERENCES Product(product_id)
+    FOREIGN KEY(product_id) REFERENCES Product(product_id),
+    FOREIGN KEY(unit_id) REFERENCES Unit(unit_id)
 );
 
 DROP TABLE IF EXISTS DonorMail;
@@ -72,6 +73,7 @@ CREATE TABLE DonorType(
 
 DROP TABLE IF EXISTS Unit;
 CREATE TABLE Unit(
+	unit_id INT NOT NULL AUTO_INCREMENT,
 	unit_name CHAR(25) NOT NULL,
 
     PRIMARY KEY(unit_name)
@@ -177,6 +179,143 @@ BEGIN
         SELECT 'Usuario agregado' AS 'STATUS';
     COMMIT ;
 
+
+END //
+
+DELIMITER ;
+
+-- Get all donors
+DROP PROCEDURE IF EXISTS GetDonors;
+DELIMITER //
+CREATE PROCEDURE GetDonors()
+BEGIN
+    SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(type_id) as "Tipo", category_id
+        FROM Donor LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id GROUP BY (DC.donor_id);
+END//
+DELIMITER ;
+
+-- Get specific donor
+DROP PROCEDURE IF EXISTS GetDonor;
+DELIMITER //
+CREATE PROCEDURE GetDonor(
+    IN _donor_id INT
+)
+BEGIN
+    SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(type_id) as "Tipo", category_id
+        FROM Donor LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id WHERE Donor.donor_id = _donor_id;
+END //
+DELIMITER ;
+
+-- Update donor data
+DROP PROCEDURE IF EXISTS UpdateDonor;
+DELIMITER //
+CREATE PROCEDURE UpdateDonor (
+    IN _jsonA JSON
+)
+BEGIN
+    DECLARE _json JSON;
+    DECLARE _idUsuario INT;
+    DECLARE name CHAR(100);
+    DECLARE city CHAR(100);
+    DECLARE colony CHAR(100);
+    DECLARE organization CHAR(100);
+    DECLARE website1 CHAR(100);
+    DECLARE website2 CHAR(100);
+    DECLARE cfdi BLOB;
+    DECLARE category INT;
+    DECLARE mail CHAR(100);
+
+    DECLARE types JSON;
+    DECLARE tempType INT;
+    DECLARE _count INT DEFAULT 0;
+    DECLARE _index INT DEFAULT 0;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT 'ERROR!' AS 'RESULTADO';
+        ROLLBACK;
+    END ;
+
+    SET _json = JSON_EXTRACT(_jsonA, '$[0]');
+    SET _idUsuario = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.id'));
+    SET name = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.name'));
+    SET city = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.city'));
+    SET colony = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.colony'));
+    SET organization = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.organization'));
+    SET website1 = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.website1'));
+    SET website2 = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.website2'));
+    SET cfdi = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.cfdi'));
+    SET category = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.category'));
+    SET types = JSON_EXTRACT(_json, '$.type');
+    SET mail = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.mail'));
+
+    SET _count = JSON_LENGTH(types) - 1;
+
+    START TRANSACTION ;
+
+        IF (cfdi = 'null') THEN
+			UPDATE Donor
+            SET
+				Donor.donor_name = name,
+                Donor.donor_city = city,
+                Donor.donor_colony = colony,
+                Donor.donor_organization = organization,
+                Donor.donor_website1 = website1,
+                Donor.donor_website2 = website2
+			WHERE Donor.donor_id = _idUsuario;
+        ELSE
+            UPDATE Donor
+            SET
+
+				Donor.donor_name = name,
+                Donor.donor_city = city,
+                Donor.donor_colony = colony,
+                Donor.donor_organization = organization,
+                Donor.donor_website1 = website1,
+                Donor.donor_website2 = website2,
+                Donor.donor_cfdi = cfdi
+			WHERE Donor.donor_id = _idUsuario;
+        END IF;
+
+        IF((SELECT ROW_COUNT()) = 0) THEN
+            SELECT CONCAT('No se pudo insertar el usuario') as 'STATUS';
+            ROLLBACK ;
+        END IF;
+
+        UPDATE DonorCategory
+		SET
+            DonorCategory.category_id = category
+		WHERE
+			DonorCategory.donor_id = _idUsuario;
+
+        IF((SELECT ROW_COUNT()) = 0) THEN
+            SELECT CONCAT('No se pudo agregar la categoria') as 'STATUS';
+            ROLLBACK ;
+        END IF;
+
+        IF ((SELECT COUNT(*) FROM DonorMail WHERE donor_id = 1) = 0) THEN
+            INSERT INTO DonorMail VALUES (0, _idUsuario, mail);
+        ELSE
+            UPDATE DonorMail SET
+                                 donor_mail = mail
+            WHERE donor_id = _idUsuario;
+        END IF ;
+
+        IF((SELECT ROW_COUNT()) = 0) THEN
+            SELECT CONCAT('No se pudo agregar el correo') as 'STATUS';
+            ROLLBACK ;
+        END IF;
+
+        DELETE FROM DonorType WHERE donor_id = _idUsuario;
+        WHILE _count >= 0 DO
+            SET _json = JSON_EXTRACT(types, CONCAT('$[',_index,']'));
+            SET _index = _index + 1;
+            SET tempType = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.id'));
+            INSERT INTO DonorType VALUES (_idUsuario, tempType);
+        END WHILE ;
+
+        SELECT 'Usuario actualizado' AS 'STATUS';
+    COMMIT ;
 
 END //
 

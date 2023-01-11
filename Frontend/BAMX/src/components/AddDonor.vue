@@ -36,6 +36,7 @@ export default{
       }
       let organizacion = document.getElementById('addDonorOrganization').value
 
+      // TODO: CHECK HOW TO STORE THE CFDI FILE
       // let cfdi = document.getElementById('addDonorCFDI').value
       // console.log(cfdi)
       
@@ -71,17 +72,6 @@ export default{
         }
         return
       }
-
-
-      // if(nombre === '' || municipio === '' || colonia === '' || organizacion === '' || tipo.length === 0){
-      //   this.$swal({
-      //     title: 'Error',
-      //     text: 'Porfavor, llena los campos obligatorios',
-      //     icon: 'error',
-      //     confirmButtonText: 'Ok'
-      //   })
-      //   return
-      // }
 
       let web1 = document.getElementById('addDonorWebsite1').value
       let web2 = document.getElementById('addDonorWebsite2').value

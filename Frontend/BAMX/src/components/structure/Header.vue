@@ -5,16 +5,12 @@
         <div class="col-lg-4">
           <nav class="site-navigation text-right ml-auto" role="navigation">
             <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-              <li class="active">
+              <li class="active" id="home-li" @click="toggleMenu()">
                 <router-link to="/home">Inicio</router-link>
               </li>
-              <li>
-                <router-link to="/about">Productos</router-link>
+              <li id="products-li" @click="toggleMenu()">
+                <router-link to="/products">Productos</router-link>
               </li>
-              <!-- <li>
-                TODO: Add other links
-                <router-link to="/about">Otro</router-link> 
-              </li> -->
             </ul>
           </nav>
         </div>
@@ -29,6 +25,41 @@
 </template>
 
 <script>
+export default {
+  name: 'Header',
+  methods: {
+    toggleMenu () {
+      let route = this.$route.path
+      console.info(route)
+      // get the menu items
+      let home = document.getElementById('home-li')
+      let products = document.getElementById('products-li')
+
+      if (route === '/products') {
+        products.classList.add('active')
+        home.classList.remove('active')
+      } else {
+        home.classList.add('active')
+        products.classList.remove('active')
+      }
+    }
+  },
+  mounted() {
+      let route = this.$route.path
+      // get the menu items
+      let home = document.getElementById('home-li')
+      let products = document.getElementById('products-li')
+
+      if (route === '/products') {
+        products.classList.add('active')
+        home.classList.remove('active')
+      } else {
+        home.classList.add('active')
+        products.classList.remove('active')
+      }
+  }
+}
+
 </script>
 
 <style>

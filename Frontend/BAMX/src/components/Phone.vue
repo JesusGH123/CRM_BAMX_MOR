@@ -137,7 +137,7 @@ export default{
 </script>
 
 <template>
-  <form class="limited-form" method="post">
+  <form class="limited-form">
     <div v-for= "(phone, index) in phones" :key="phone.phone_id">
       <label for="phone" class="form-label">Tel&eacute;fono {{index + 1}}</label>
       <div class="input-group">
@@ -145,10 +145,12 @@ export default{
         <button class="btn btn-outline-secondary delete-form" type="button" name="id" :id="phone.phone_id" @click="deleteAlert(phone.phone_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
       </div>
     </div>
-    <div class="d-grid">
-      <button type="button" class="btn btn-outline-success d-inline-block" data-bs-toggle="modal" data-bs-target="#addPhone">+</button>
-    </div>
   </form>
+  <div class="d-flex align-content-center align-items-center btn-div">
+    <button type="button" class="btn btn-outline-success btn-add" data-bs-toggle="modal" data-bs-target="#addPhone">
+      <p class="text-btn">+</p>
+    </button>
+  </div>
 
 
 <!-- Modal -->
@@ -191,5 +193,23 @@ export default{
 }
 button:hover.delete-form{
   background-color:rgba(239, 12, 12, 0.25) !important;
+}
+.btn-add{
+  border-radius: 50% !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
+  max-width: 50px !important;
+  max-height: 50px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+.text-btn{
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0;
+  min-width: 50px;
+  max-width: 50px;
+  min-height: 50px;
+  max-height: 50px;
 }
 </style>

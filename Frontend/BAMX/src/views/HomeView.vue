@@ -28,7 +28,7 @@ import AddDonor from '../components/AddDonor.vue'
             <th>Colonia</th>
             <th>Organizaci&oacute;n/Gremio</th>
             <th>Tipo de aliado</th>
-            <th>Sitio[s] web</th>
+            <th>Productos</th>
             <th>Categor&iacute;a</th>
             <th>CFDI</th>
           </tr>

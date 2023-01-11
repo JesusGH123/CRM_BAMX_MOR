@@ -29,24 +29,6 @@ module.exports.get_donor = (request, response) => {
 
 //Add a new donor
 module.exports.add_donor = (request, response) => {
-  // let sql = "CALL CreateDonor(?, ?, ?, ?, ?, ?, ?)"
-  // connection.query(sql, 
-  //   [
-  //     request.query.name,
-  //     request.query.city,
-  //     request.query.colony,
-  //     request.query.organization,
-  //     request.query.website1,
-  //     request.query.website2,
-  //     request.query.cfdi,
-  //   ],
-  //   (error, results, fields) => {
-  //   if(error) {
-  //     response.send(error)
-  //   }
-  //   response.json(results)
-  // })
-  
   let sql = "CALL CreateDonor(?)"
   // send Json object
   connection.query(
@@ -73,17 +55,10 @@ module.exports.delete_donor = (request, response) => {
 
 //Update a specific donor
 module.exports.update_donor = (request, response) => {
-  let sql = "UPDATE Donor SET donor_name = ?, donor_city = ?, donor_colony = ?, donor_organization = ?, donor_website1 = ?, donor_website2 = ?, donor_cfdi = ?";
+  let sql = "CALL UpdateDonor(?)";
   connection.query(sql,
-    [
-      request.query.name,
-      request.query.city,
-      request.query.colony,
-      request.query.organization,
-      request.query.website1,
-      request.query.website2,
-      request.params.cfdi
-    ], (error, results, fields) => {
+    [JSON.stringify(request.body)],
+    (error, results, fields) => {
     if(error) {
       response.send(error)
     }

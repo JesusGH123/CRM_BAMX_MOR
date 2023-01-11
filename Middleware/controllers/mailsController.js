@@ -10,7 +10,7 @@ let connection = mysql.createConnection(config)
 
 //Get all mails for a specific donor
 module.exports.get_mails = (request, response) => {
-    let sql = "SELECT * FROM DonorMail WHERE donor_id = ?"
+    let sql = "SELECT donor_mail FROM DonorMail WHERE donor_id = ?"
     connection.query(sql, [request.params.id], (error, results, fields) => {
         if(error) {
             response.send(error)
