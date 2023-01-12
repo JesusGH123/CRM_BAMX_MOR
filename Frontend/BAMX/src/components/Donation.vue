@@ -30,30 +30,30 @@ export default{
         console.log(error)
       }
     },
-    deleteDonation(idProduct){
-      console.log(idProduct)
+    deleteDonation(idDonation){
+      console.log(idDonation)
       // TODO: Delete donation
-      // try {
-      //   axios.delete('http://localhost:3000/product/' + idProduct)
-      //   .then(response => {
-      //     console.log(response)
-      //   })
-      // } catch (error) {
-      //   console.log(error)
-      // }
+      try {
+        axios.delete('http://localhost:3000/donation/' + idDonation)
+        .then(response => {
+          console.log(response)
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     getDonations() {
       // TODO: Get donations
-      // try{
-      //   axios.get('http://localhost:3000/product/' + this.idDonor)
-      //   .then(response => {
-      //     this.donations = response.data
-      //     // console.log(this.donations)
-      //     // console.log(this.idDonor)
-      //   })
-      // } catch (error) {
-      //   console.log(error)
-      // }
+      try{
+        axios.get('http://localhost:3000/donation/' + this.idDonor)
+        .then(response => {
+          this.donations = response.data
+          console.log(this.donations)
+          // console.log(this.idDonor)
+        })
+      } catch (error) {
+        console.log(error)
+      }
     },
     deleteAlert(id){
       event.preventDefault() // prevent form submit
@@ -111,20 +111,23 @@ export default{
       })
     },
     addDonation(id){
-      // TODO: Add donation
-    //   event.preventDefault() // prevent form submit
-    //   try {
-    //         axios.post('http://localhost:3000/phone/' + this.idDonor, {}, {
-    //           params: {
-    //             phone: document.getElementById('addPhoneNumber').value
-    //           }
-    //         })
-    //         .then(response => {
-    //           console.log(response)
-    //         })
-    //       } catch (error) {
-    //         console.log(error)
-    //       }
+      event.preventDefault() // prevent form submit
+      try {
+            axios.post('http://localhost:3000/donation/' + this.idDonor, {}, {
+              params: {
+                product_id: id,
+                donation_date: null,
+                donation_observation: null,
+                product_quantity: null,
+                product_unit: null
+              }
+            })
+            .then(response => {
+              console.log(response)
+            })
+          } catch (error) {
+            console.log(error)
+          }
     },
     capitalize(data){
         return data.charAt(0).toUpperCase() + data.slice(1)
@@ -135,12 +138,13 @@ export default{
 
 <template>
   <form class="limited-form">
-    <div v-for= "(donation, index) in donations" :key="donation.product_id">
-      <label for="donation" class="form-label">Tel&eacute;fono {{index + 1}}</label>
-      <div class="input-group">
-        <input class="form-control mb-3" type="text" @keypress="validate($event)" maxlength="10" name="donation" id="donation" :value="donation.donor_phone">
-        <button class="btn btn-outline-secondary delete-form" type="button" name="id" :id="donation.phone_id" @click="deleteAlert(donation.phone_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
-      </div>
+    <div v-for= "donation in donations" :key="donation.donation_id">
+      <span v-for="product in products" :key="product.product_id">
+        <div v-if="product.product_id === donation.product_id" class="input-group">
+          <input disabled class="form-control mb-3" type="text" name="donation" :id="'donInp' + donation.donation_id" :value="capitalize(product.product_name)">
+          <button class="btn btn-outline-secondary delete-form" type="button" name="id" :id="'don' + donation.donation_id" @click="deleteAlert(donation.donation_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
+        </div>
+      </span>
     </div>
   </form>
   <div class="d-flex align-content-center align-items-center btn-div">
@@ -165,7 +169,11 @@ export default{
             <!-- Dropdown of the products -->
             <select class="form-select" aria-label="Default select example" id="addProduct">
               <option selected>Selecciona un producto</option>
-              <option v-for="product in products" :value="product.product_id">{{capitalize(product.product_name)}}</option>
+              <template v-for="product in products">
+                <template v-for="donation in donations">
+                  <option v-if="product.product_id !== donation.product_id" :value="product.product_id">{{capitalize(product.product_name)}}</option>
+                </template>
+              </template>
             </select>
           </div>
         </form>
