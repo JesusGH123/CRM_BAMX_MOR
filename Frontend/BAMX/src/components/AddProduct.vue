@@ -43,9 +43,9 @@ export default{
     addProduct(data){
       // console.log(data)
       try{
-        axios.post('http://localhost:3000/donor', data, {
-          headers: {
-            'Content-Type': 'application/json'
+        axios.post('http://localhost:3000/product/', {}, {
+          params: {
+            name: data
           }
         })
         .then(response => {
@@ -65,7 +65,7 @@ export default{
 
 <!-- Modal -->
 <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addProductLabel">Agregar Producto</h5>

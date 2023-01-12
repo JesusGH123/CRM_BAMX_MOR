@@ -14,7 +14,7 @@ export default {
     methods: {
         deleteProduct(idProduct){
             try {
-                axios.delete('http://localhost:3000/donor/' + idProduct)
+                axios.delete('http://localhost:3000/product/' + idProduct)
                 .then(response => {
                     console.log(response)
                 })
@@ -26,7 +26,7 @@ export default {
             try {
                 axios.get("http://localhost:3000/product")
                     .then(response => {
-                    this.products = response.data[0];
+                    this.products = response.data;
                 });
             }
             catch (error) {
@@ -57,21 +57,21 @@ export default {
                     })
                 }
             });
+        },
+        capitalize(data){
+            return data.charAt(0).toUpperCase() + data.slice(1)
         }
     }
 }
 </script>
 
 <template>
-  <tr v-for="product in products" :key="product.donor_id" class="fila">
-    <div hidden></div>
+  <tr v-for="product in products" :key="product.product_id" class="fila">
     <td>
-      <router-link :to="{name: 'edit', params:{id: product.donor_id}}">
-        <button class="btn update" :id="product.donor_id"><img src="../assets/pencil.png" title="editImage" width="16" height="16"/></button>
-      </router-link>
+      {{ capitalize(product.product_name) }}
     </td>
     <td>
-      <button class="btn delete" :id="product.donor_id" @click="deleteAlert(product.donor_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
+      <button class="btn delete" :id="'product_'+product.product_id" @click="deleteAlert(product.product_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
     </td>
   </tr>
 </template>
@@ -83,14 +83,8 @@ tr {
 button{
   padding: 8px 10px !important;
 }
-button:hover.update {
-  background-color: rgba(0, 0, 200, 0.25) !important;
-}
 button:hover.delete {
   background-color:rgba(239, 12, 12, 0.25) !important;
-}
-button:hover.download {
-  background-color: rgba(0, 200, 0, 0.25) !important;
 }
 .fila:hover {
   background-color: rgba(200, 200, 200, 0.5) !important;

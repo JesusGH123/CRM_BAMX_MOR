@@ -6,6 +6,11 @@ import CategoryDonor from './CategoryDonor.vue'
 
 export default{
   name: 'AddDonor',
+  data(){
+    return {
+      _cfdi: ''
+    }
+  },
   methods:{
     validatePhone: function(event){
       var theEvent = event || window.event;
@@ -102,34 +107,52 @@ export default{
         confirmButtonText: 'Si'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.addDonor(json)
-          this.$swal({
-            title: '¡Agregado!',
-            text: 'El donador ha sido agregado.',
-            icon: 'success',
-            confirmButtonText: 'Ok'
-          }).then((result)=>{
-            if(result.isConfirmed){                        
-              location.reload()
-            }
-          })
+          this.addDonor(json)          
         }
       })
     },
-    addDonor(data){
-      // console.log(data)
+    async addDonor(data){
+      let result = ''
       try{
-        axios.post('http://localhost:3000/donor', data, {
+        await axios.post('http://localhost:3000/donor', data, {
           headers: {
             'Content-Type': 'application/json'
           }
         })
         .then(response => {
           console.log(response)
+          if( response['data'][0][0].RESULT === 'SUCCESS'){
+            this.$swal({
+              title: '¡Agregado!',
+              text: 'El donador ha sido agregado.',
+              icon: 'success',
+              confirmButtonText: 'Ok'
+            }).then((result)=>{
+              if(result.isConfirmed){                        
+                location.reload()
+              }
+            })
+          } else
+            this.$swal({
+              title: 'Oops!',
+              text: 'Hubo un error.',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            }).then((result)=>{
+              if(result.isConfirmed){                        
+                location.reload()
+              }
+            })
+
         })
       } catch (error) {
         console.log(error)
       }
+      return result
+    },
+    handleFile(e){
+      this._cfdi = e.target.files[0]
+      console.log(this._cfdi)
     }
   },
   components:{
@@ -199,7 +222,7 @@ export default{
           <div class="row d-flex align-items-center m-2">
             <label for="addDonorCfdi" class="col-sm-2">CFDI</label>
             <div class="col-sm-10">
-              <input type="file" class="form-control modalInputText" id="addDonorCfdi" name="donorCfdi" accept=".pdf">
+              <input type="file" class="form-control modalInputText" id="addDonorCfdi" name="donorCfdi" @change="handleFile($event)" accept=".pdf">
             </div>
           </div>
         </form>

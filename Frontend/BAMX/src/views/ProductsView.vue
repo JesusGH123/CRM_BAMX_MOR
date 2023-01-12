@@ -19,19 +19,20 @@ import Product from '../components/Product.vue';
           <button class="btn search_btn" style="margin-left: 10px;"><img src="../assets/search.png" alt="search_icon" width="16" height="16" style="padding:0; margin:0;"></button>
         </form>
       </div>
-    </div>    
-    <table style="width:100%">
-      <thead>
-        <tr>
-          <th style="width:80%;">Nombre</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <Product />
-      </tbody>
-    </table>
+    </div> 
+    <div class="row" >
+      <table style="width:80%; margin: 0 auto;">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <Product />
+        </tbody>
+      </table>
+    </div>   
   </div>
 </template>
 

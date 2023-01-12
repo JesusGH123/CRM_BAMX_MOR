@@ -76,7 +76,7 @@ CREATE TABLE Unit(
 	unit_id INT NOT NULL AUTO_INCREMENT,
 	unit_name CHAR(25) NOT NULL,
 
-    PRIMARY KEY(unit_name)
+    PRIMARY KEY(unit_id)
 );
 
 DROP TABLE IF EXISTS Type;
@@ -132,10 +132,11 @@ BEGIN
     DECLARE _index INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SELECT 'ERROR!' AS 'RESULTADO';
-        ROLLBACK;
-    END ;
+        BEGIN
+            SELECT 'ERROR!' AS 'RESULT';
+
+            ROLLBACK;
+        END ;
 
     SET _json = JSON_EXTRACT(_jsonA, '$[0]');
     SET name = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.name'));
@@ -151,12 +152,12 @@ BEGIN
     SET _count = JSON_LENGTH(types) - 1;
 
     START TRANSACTION ;
-
         IF (cfdi = 'null') THEN
             INSERT INTO Donor VALUES (0, name, city, colony, organization, website1, website2, null);
         ELSE
             INSERT INTO Donor VALUES (0, name, city, colony, organization, website1, website2, cfdi);
         END IF;
+
         SELECT LAST_INSERT_ID() INTO _idUsuario;
         IF((SELECT ROW_COUNT()) = 0) THEN
             SELECT CONCAT('No se pudo insertar el usuario') as 'STATUS';
@@ -165,19 +166,23 @@ BEGIN
 
         INSERT INTO DonorCategory VALUES (_idUsuario, category);
         IF((SELECT ROW_COUNT()) = 0) THEN
-                SELECT CONCAT('No se pudo agregar la categoria') as 'STATUS';
-                ROLLBACK ;
-            END IF;
+            SELECT CONCAT('No se pudo agregar la categoria') as 'STATUS';
+            ROLLBACK ;
+        END IF;
 
         WHILE _count >= 0 DO
             SET _json = JSON_EXTRACT(types, CONCAT('$[',_index,']'));
             SET _index = _index + 1;
             SET tempType = JSON_UNQUOTE(JSON_EXTRACT(_json, '$.id'));
             INSERT INTO DonorType VALUES (_idUsuario, tempType);
+            IF((SELECT ROW_COUNT()) = 0) THEN
+                SELECT CONCAT('No se pudo agregar el tipo') as 'STATUS';
+                ROLLBACK ;
+            END IF;
+            SET _count = _count -1;
         END WHILE ;
-
-        SELECT 'Usuario agregado' AS 'STATUS';
     COMMIT ;
+    SELECT 'SUCCESS' AS 'RESULT';
 
 
 END //

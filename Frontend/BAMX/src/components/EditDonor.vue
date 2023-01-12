@@ -4,6 +4,7 @@ import Town from './Town.vue'
 import TypesDonor from './TypesDonor.vue'
 import CategoryDonor from './CategoryDonor.vue'
 import Phone from './Phone.vue'
+import Donation from './Donation.vue'
 
 
 export default {
@@ -18,31 +19,20 @@ export default {
     Town,
     TypesDonor,
     CategoryDonor,
-    Phone
-  },
+    Phone,
+    Donation
+},
   data() {
     return {
       donors: {},
-      phones: {},
       mail: '',
     }
   },
   mounted() {
     this.getDonor()
-    this.getPhones()
     this.getMail()
   },
   methods: {
-    deletePhone(idPhone){
-      try {
-        axios.delete('http://localhost:3000/phone/' + idPhone)
-        .then(response => {
-          console.log(response)
-        })
-      } catch (error) {
-        console.log(error)
-      }
-    },
     getDonor() {
       try{
         axios.get('http://localhost:3000/donor/' + this.idDonor)
@@ -55,54 +45,16 @@ export default {
         console.log(error)
       }
     },
-    getPhones() {
-      try{
-        axios.get('http://localhost:3000/phone/' + this.idDonor)
-        .then(response => {
-          this.phones = response.data
-          console.log(this.phones)
-          // console.log(this.idDonor)
-        })
-      } catch (error) {
-        console.log(error)
-      }
-    },
     getMail(){
       try{
         axios.get('http://localhost:3000/mail/donor/' + this.idDonor)
         .then(response => {
           this.mail = response.data[0]
-          console.log(this.mail)
+          // console.log(this.mail)
         })
       } catch (error) {
         console.log(error)
       }
-    },
-    deleteAlert(id){
-      event.preventDefault() // prevent form submit
-      this.$swal({
-                title: "¿Estas seguro(a)?",
-                text: "No podrás revertir esto!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Si"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                  this.deletePhone(id)
-                  this.$swal({
-                    title: "¡Borrado!",
-                    text: "El registro ha sido borrado.",
-                    icon: "success"
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      location.reload()
-                    }
-                  })
-                }else
-                  this.$swal("¡Cancelado!", "El registro no ha sido borrado.", "error");
-            });
     },
     confirmAlert(){
       let erroresDiv = document.getElementById('errores')
@@ -281,10 +233,9 @@ export default {
       </div>
       <div class="col-6">
         <h2 class="text-center">Donaciones</h2>
-        <form class="limited-form">
-          <label for="product" class="form-label">Producto</label>
-          <input class="form-control mb-3" type="text" name="product" id="product">
-        </form>
+          <span v-for="donor in donors" :key="donor.donor_id">
+            <Donation :idDonor = donor.donor_id />
+        </span>
       </div>
     </div>
     <div class="row errores" id="errores"></div>
