@@ -381,14 +381,14 @@ DROP PROCEDURE IF EXISTS AddDonationToDonor;
 DELIMITER //
 CREATE PROCEDURE AddDonationToDonor(
 	donor_id INT,
-    product_name CHAR(25),
+    product_id CHAR(25),
     donation_date TIMESTAMP,
     donation_observation CHAR(200),
     product_quantity FLOAT,
     product_unit CHAR(25)
 )
 BEGIN
-	INSERT INTO DonorProduct VALUES(null, donor_id, product_name, donation_date, donation_observation, product_quantity, product_unit);
+	INSERT INTO DonorProduct VALUES(null, donor_id, product_id, donation_date, donation_observation, product_quantity, product_unit);
 END //
 DELIMITER ;
 
