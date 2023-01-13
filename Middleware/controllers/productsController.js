@@ -49,13 +49,13 @@ module.exports.delete_product = (request, response) => {
     })
 }
 
-// Filter products
+//Filter donors where name or product = search
 module.exports.filter_products = (request, response) => {
-  let sql = "CALL FilterProducts(?)";
-    connection.query(sql, request.query.name, (error, results, fields) => {
-        if(error) {
-            response.send(error)
-        }
-        response.json(results)
+    let sql = "CALL FilterProducts(?)";
+    connection.query(sql, [request.params.search], (error, results, fields) => {
+      if(error) {
+        response.send(error)
+      }
+      response.json(results)
     })
-}
+  }

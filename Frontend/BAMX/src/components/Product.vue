@@ -34,13 +34,10 @@ export default {
           if(this.filtered === true){
             let busqueda = document.getElementById("busqueda").value;
             try {
-                axios.get("http://localhost:3000/product/productFiltered", {
-                  params: {
-                    name: busqueda
-                  }})
+                axios.get("http://localhost:3000/product/search/" + busqueda)
                     .then(response => {
-                    this.products = response.data;
-                    console.log(this.products)
+                    this.products = response.data[0];
+                    // console.log(this.products)
                 });
             }
             catch (error) {
