@@ -65,3 +65,13 @@ module.exports.update_donor = (request, response) => {
     response.json(results)
   })
 }
+//Filter donors where name or product = search
+module.exports.filter_donors = (request, response) => {
+  let sql = "CALL FilterDonors(?)";
+  connection.query(sql, request.query.search, (error, results, fields) => {
+    if(error) {
+      response.send(error)
+    }
+    response.json(results)
+  })
+}

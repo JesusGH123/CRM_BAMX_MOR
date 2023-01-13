@@ -170,8 +170,11 @@ export default{
             <select class="form-select" aria-label="Default select example" id="addProduct">
               <option selected>Selecciona un producto</option>
               <template v-for="product in products">
-                <template v-for="donation in donations">
+                <template v-if="this.donations.length > 0" v-for="donation in donations">
                   <option v-if="product.product_id !== donation.product_id" :value="product.product_id">{{capitalize(product.product_name)}}</option>
+                </template>
+                <template v-else>
+                  <option :value="product.product_id">{{capitalize(product.product_name)}}</option>
                 </template>
               </template>
             </select>
@@ -179,8 +182,8 @@ export default{
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" @click="addAlert()">Save changes</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" @click="addAlert()">Save changes</button>
       </div>
     </div>
   </div>

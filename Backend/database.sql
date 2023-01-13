@@ -1,4 +1,4 @@
--- "BAMX" database v3.5.0
+-- "BAMX" database v3.6.0
 DROP DATABASE IF EXISTS BAMX;
 CREATE DATABASE BAMX;
 USE BAMX;
@@ -189,13 +189,27 @@ END //
 
 DELIMITER ;
 
+-- -- Get all donors
+-- DROP PROCEDURE IF EXISTS GetDonors;
+-- DELIMITER //
+-- CREATE PROCEDURE GetDonors()
+-- BEGIN
+--     SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(type_id) as "Tipo", category_id
+--         FROM Donor LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id GROUP BY (DC.donor_id);
+-- END//
+-- DELIMITER ;
+
 -- Get all donors
 DROP PROCEDURE IF EXISTS GetDonors;
 DELIMITER //
 CREATE PROCEDURE GetDonors()
 BEGIN
-    SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(type_id) as "Tipo", category_id
-        FROM Donor LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id GROUP BY (DC.donor_id);
+    SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_id) as 'Donations', GROUP_CONCAT(DISTINCT type_id) as "Tipo", category_id
+	FROM Donor
+    LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
+    LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
+    LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+    GROUP BY (DC.donor_id);
 END//
 DELIMITER ;
 
@@ -206,8 +220,12 @@ CREATE PROCEDURE GetDonor(
     IN _donor_id INT
 )
 BEGIN
-    SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(type_id) as "Tipo", category_id
-        FROM Donor LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id WHERE Donor.donor_id = _donor_id;
+    SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_id) AS 'Donations',GROUP_CONCAT(DISTINCT type_id) as "Tipo", category_id
+        FROM Donor
+            LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
+            LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
+            LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+        WHERE Donor.donor_id = _donor_id;
 END //
 DELIMITER ;
 
@@ -411,6 +429,39 @@ BEGIN
 	DELETE FROM Donor WHERE Donor.donor_id = donor_id;
 END //
 DELIMITER ;
+
+
+-- Filter: Donors by name of product
+DROP PROCEDURE IF EXISTS FilterDonors;
+DELIMITER //
+CREATE PROCEDURE FilterDonors(
+	search CHAR(100)
+)
+BEGIN
+    SET search = CONCAT('%', search, '%');
+    IF((SELECT COUNT(*) FROM Donor WHERE donor_name LIKE search) > 0) THEN
+        BEGIN
+            SELECT Donor.donor_id
+                FROM Donor
+                WHERE donor_name LIKE search;
+        END;
+    ELSE IF ((SELECT COUNT(*) FROM DonorProduct LEFT JOIN Product ON DonorProduct.product_id = Product.product_id WHERE product_name LIKE search) > 0) THEN
+        BEGIN
+            SELECT DISTINCT Donor.donor_id
+                FROM Donor
+                LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+                LEFT JOIN Product P on DP.product_id = P.product_id
+                WHERE product_name LIKE search
+                GROUP BY (Donor.donor_id);
+        END;
+    ELSE
+        SELECT 'Not found' AS 'RESULT';
+    END IF ;
+    END IF;
+END //
+DELIMITER ;
+
+
 
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Bronce');
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Plata');
