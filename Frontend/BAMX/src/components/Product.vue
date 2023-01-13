@@ -1,11 +1,19 @@
 <script>
 import axios from 'axios'
+import AddProduct from '../components/AddProduct.vue';
 
 export default {
     name: "Product",
+    props: {
+        title: String
+    },
+    components: {
+        AddProduct
+    },
     data() {
         return {
-            products: {}
+            products: {},
+            filtered: Boolean
         };
     },
     mounted() {
@@ -23,6 +31,23 @@ export default {
             }
         },
         getProducts() {
+          if(this.filtered === true){
+            let busqueda = document.getElementById("busqueda").value;
+            try {
+                axios.get("http://localhost:3000/product/productFiltered", {
+                  params: {
+                    name: busqueda
+                  }})
+                    .then(response => {
+                    this.products = response.data;
+                    console.log(this.products)
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+          } else {
+
             try {
                 axios.get("http://localhost:3000/product")
                     .then(response => {
@@ -32,6 +57,7 @@ export default {
             catch (error) {
                 console.log(error);
             }
+          }
         },
         deleteAlert(id) {
             this.$swal({
@@ -60,20 +86,75 @@ export default {
         },
         capitalize(data){
             return data.charAt(0).toUpperCase() + data.slice(1)
+        },
+        filterProducts(){
+          event.preventDefault()
+          let search = document.getElementById("busqueda").value
+          if(search === ""){
+            this.filtered = false
+            this.getProducts()
+            return
+          } else{
+            this.filtered = true
+            this.getProducts()
+            return
+          }
         }
     }
 }
 </script>
 
 <template>
-  <tr v-for="product in products" :key="product.product_id" class="fila">
-    <td>
-      {{ capitalize(product.product_name) }}
-    </td>
-    <td>
-      <button class="btn delete" :id="'product_'+product.product_id" @click="deleteAlert(product.product_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
-    </td>
-  </tr>
+<div class="row" v-if="this.title !== undefined">
+  <div class="col-2 d-flex justify-content-center align-items-center">
+    <AddProduct />
+  </div>
+  <div class="col-7 d-flex justify-content-center">
+    <h1>{{ this.title }}</h1>
+  </div>
+  <div class="col-3 d-flex justify-content-center align-items-center">
+    <form action="" style="margin-top: 10px;" autocomplete="off">
+      <input autocomplete="false" hidden type="text" style="display:none;">
+      <input type="text" placeholder="Buscar"  id="busqueda">
+      <button type="submit" class="btn search_btn" style="margin-left: 10px;" @click="filterProducts">
+        <img src="../assets/search.png" alt="search_icon" width="16" height="16" style="padding:0; margin:0;">
+      </button>
+    </form>
+  </div>
+</div> 
+<div class="row m-3" v-else>
+  <div class="col-3 d-flex justify-content-center align-items-center">
+    <AddProduct />
+  </div>
+  <div class="col-6 d-flex justify-content-center"></div>
+  <div class="col-3 d-flex justify-content-center align-items-center">
+    <form action="" style="margin-top: 10px;" autocomplete="off">
+      <input autocomplete="false" hidden type="text" style="display:none;">
+      <input type="text" placeholder="Buscar"  >
+      <button class="btn search_btn" style="margin-left: 10px;"><img src="../assets/search.png" alt="search_icon" width="16" height="16" style="padding:0; margin:0;"></button>
+    </form>
+  </div>
+</div> 
+<div class="row" >
+  <table style="width:80%; margin: 0 auto;">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Eliminar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="product in products" :key="product.product_id" class="fila">
+        <td>
+          {{ capitalize(product.product_name) }}
+        </td>
+        <td>
+          <button class="btn delete" :id="'product_'+product.product_id" @click="deleteAlert(product.product_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </template>
 
 <style>

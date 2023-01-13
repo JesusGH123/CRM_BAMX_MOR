@@ -1,4 +1,4 @@
--- "BAMX" database v3.6.0
+-- "BAMX" database v3.5.0
 DROP DATABASE IF EXISTS BAMX;
 CREATE DATABASE BAMX;
 USE BAMX;
@@ -461,6 +461,20 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS FilterProducts;
+DELIMITER //
+CREATE PROCEDURE FilterProducts(
+    search CHAR(100)
+)
+BEGIN
+    SET search = CONCAT('%', search, '%');
+    IF ((SELECT COUNT(*) FROM Product WHERE product_name LIKE search) > 0 ) THEN
+        SELECT * FROM Product WHERE product_name LIKE search;
+    ELSE
+        SELECT 'NOT FOUND' AS 'RESULT';
+    END IF;
+END //
+DELIMITER ;
 
 
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Bronce');

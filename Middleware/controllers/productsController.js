@@ -7,7 +7,7 @@ let connection = mysql.createConnection(config)
 //Get all products for a specific donor
 module.exports.get_products = (request, response) => {
     let sql = "SELECT * FROM Product"
-    connection.query(sql, [request.params.id], (error, results, fields) => {
+    connection.query(sql, (error, results, fields) => {
         if(error) {
             response.send(error)
         }
@@ -42,6 +42,17 @@ module.exports.add_product = (request, response) => {
 module.exports.delete_product = (request, response) => {
     let sql = "DELETE FROM Product WHERE product_id = ?"
     connection.query(sql, [request.params.product_id], (error, results, fields) => {
+        if(error) {
+            response.send(error)
+        }
+        response.json(results)
+    })
+}
+
+// Filter products
+module.exports.filter_products = (request, response) => {
+  let sql = "CALL FilterProducts(?)";
+    connection.query(sql, request.query.name, (error, results, fields) => {
         if(error) {
             response.send(error)
         }
