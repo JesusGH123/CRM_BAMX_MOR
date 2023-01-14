@@ -28,7 +28,8 @@ export default {
     },
     methods: {
         getProducts() {
-            axios.get("http://localhost:3000/product")
+            // axios.get("http://localhost:3000/product")
+            axios.get(this.$hostname + "/product")
                 .then(response => {
                     this.products = response.data;                    
                 })
@@ -37,7 +38,8 @@ export default {
                 });
         },
         getCategorias() {
-            axios.get("http://localhost:3000/categories")
+            // axios.get("http://localhost:3000/categories")
+            axios.get(this.$hostname + "/categories")
                 .then(response => {
                     this.categorias = response.data;
                 })
@@ -46,7 +48,8 @@ export default {
                 });
         },
         getTypes() {
-            axios.get("http://localhost:3000/types")
+            // axios.get("http://localhost:3000/types")
+            axios.get(this.$hostname + "/types")
                 .then(response => {
                     this.types = response.data;
                 })
@@ -56,7 +59,8 @@ export default {
         },
         deleteDonor(idDonor){
             try {
-                axios.delete('http://localhost:3000/donor/' + idDonor)
+                // axios.delete('http://localhost:3000/donor/' + idDonor)
+                axios.delete(this.$hostname + '/donor/' + idDonor)
                 .then(response => {
                     console.log(response)
                 })
@@ -68,7 +72,8 @@ export default {
           if(this.filtered === true){
             let search = document.getElementById("busqueda").value
             try {
-                axios.get("http://localhost:3000/donorFiltered", {
+                // axios.get("http://localhost:3000/donorFiltered", {
+                axios.get(this.$hostname + "/donorFiltered", {
                     params: {
                         search: search
                     }})
@@ -88,7 +93,8 @@ export default {
             return
           } else {
             try {
-                axios.get("http://localhost:3000/")
+                // axios.get("http://localhost:3000/")
+                axios.get(this.$hostname)
                     .then(response => {
                     this.donors = response.data[0];
                 });
@@ -138,6 +144,9 @@ export default {
             this.getDonors()
             return
           }
+        },
+        downloadFile(name){
+          window.open(this.$hostname + "/upload/" + name, '_blank')
         }
     }
 }
@@ -214,7 +223,7 @@ export default {
       </div>
     </td>
     <td>
-      <button v-if="donor.donor_cfdi != NULL" class="btn download" :id="donor.donor_id" @click="descargar(donor.donor_id)"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>
+      <button v-if="donor.donor_cfdi != NULL" class="btn download" :id="donor.donor_id" @click="downloadFile(donor.donor_cfdi)"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>
       <button v-else class="btn download" :id="donor.donor_id" disabled style="border: none"><img src="../assets/download.png" title="descargar_cfdi" width="16"></button>
     </td>
     
@@ -280,6 +289,11 @@ input[type=number]{
 
 .search_btn:hover{
   background-color: rgba(255,0,0,0.5) !important;
+}
+
+td{
+  padding: 10px 0;
+  max-width: 200px;
 }
 
 </style>

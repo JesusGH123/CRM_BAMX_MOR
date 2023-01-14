@@ -18,7 +18,8 @@ export default {
   },
   methods: {
     getTypes() {
-      axios.get('http://localhost:3000/types')
+      // axios.get('http://localhost:3000/types')
+      axios.get(this.$hostname + '/types')
         .then(response => {
           this.tipos = response.data
         })

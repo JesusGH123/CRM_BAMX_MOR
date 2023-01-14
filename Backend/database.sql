@@ -12,7 +12,7 @@ CREATE TABLE Donor(
     donor_organization CHAR(100),
     donor_website1 CHAR(50),
     donor_website2 CHAR(50),
-    donor_cfdi BLOB,
+    donor_cfdi CHAR(50),
 
     PRIMARY KEY(donor_id)
 );
@@ -123,7 +123,7 @@ BEGIN
     DECLARE organization CHAR(100);
     DECLARE website1 CHAR(100);
     DECLARE website2 CHAR(100);
-    DECLARE cfdi BLOB;
+    DECLARE cfdi CHAR(100);
     DECLARE category INT;
 
     DECLARE types JSON;
@@ -244,7 +244,7 @@ BEGIN
     DECLARE organization CHAR(100);
     DECLARE website1 CHAR(100);
     DECLARE website2 CHAR(100);
-    DECLARE cfdi BLOB;
+    DECLARE cfdi CHAR(100);
     DECLARE category INT;
     DECLARE mail CHAR(100);
 
@@ -289,7 +289,6 @@ BEGIN
         ELSE
             UPDATE Donor
             SET
-
 				Donor.donor_name = name,
                 Donor.donor_city = city,
                 Donor.donor_colony = colony,
@@ -473,6 +472,17 @@ BEGIN
     ELSE
         SELECT 'NOT FOUND' AS 'RESULT';
     END IF;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS SetCFDI;
+DELIMITER //
+CREATE PROCEDURE SetCFDI(
+donorID INT,
+filePath CHAR(100)
+)
+BEGIN
+    UPDATE Donor SET donor_cfdi = filePath WHERE donor_id = donorID;
 END //
 DELIMITER ;
 

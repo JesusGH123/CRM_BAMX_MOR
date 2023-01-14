@@ -35,7 +35,8 @@ export default{
     },
     deletePhone(idPhone){
       try {
-        axios.delete('http://localhost:3000/phone/' + idPhone)
+        // axios.delete('http://localhost:3000/phone/' + idPhone)
+        axios.delete(this.$hostname + '/phone/' + idPhone)
         .then(response => {
           console.log(response)
         })
@@ -45,7 +46,8 @@ export default{
     },
     getPhones() {
       try{
-        axios.get('http://localhost:3000/phone/' + this.idDonor)
+        // axios.get('http://localhost:3000/phone/' + this.idDonor)
+        axios.get(this.$hostname + '/phone/' + this.idDonor)
         .then(response => {
           this.phones = response.data
           // console.log(this.phones)
@@ -120,7 +122,8 @@ export default{
     addPhone(){
       event.preventDefault() // prevent form submit
       try {
-            axios.post('http://localhost:3000/phone/' + this.idDonor, {}, {
+            // axios.post('http://localhost:3000/phone/' + this.idDonor, {}, {
+            axios.post(this.$hostname + '/phone/' + this.idDonor, {}, {
               params: {
                 phone: document.getElementById('addPhoneNumber').value
               }

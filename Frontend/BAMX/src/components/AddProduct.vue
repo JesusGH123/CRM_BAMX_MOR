@@ -43,7 +43,8 @@ export default{
     addProduct(data){
       // console.log(data)
       try{
-        axios.post('http://localhost:3000/product/', {}, {
+        // axios.post('http://localhost:3000/product/', {}, {
+        axios.post(this.$hostname + '/product/', {}, {
           params: {
             name: data
           }

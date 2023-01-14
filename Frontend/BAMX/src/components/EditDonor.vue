@@ -26,6 +26,7 @@ export default {
     return {
       donors: {},
       mail: '',
+      cdfi: ''
     }
   },
   mounted() {
@@ -35,7 +36,8 @@ export default {
   methods: {
     getDonor() {
       try{
-        axios.get('http://localhost:3000/donor/' + this.idDonor)
+        // axios.get('http://localhost:3000/donor/' + this.idDonor)
+        axios.get(this.$hostname + '/donor/' + this.idDonor)
         .then(response => {
           this.donors = response.data[0]
           // console.log(this.donors)
@@ -47,7 +49,8 @@ export default {
     },
     getMail(){
       try{
-        axios.get('http://localhost:3000/mail/donor/' + this.idDonor)
+        // axios.get('http://localhost:3000/mail/donor/' + this.idDonor)
+        axios.get(this.$hostname + '/mail/donor/' + this.idDonor)
         .then(response => {
           this.mail = response.data[0]
           // console.log(this.mail)
@@ -68,10 +71,6 @@ export default {
         colonia = document.getElementById('otra_colonia').value
       }
       let organizacion = document.getElementById('gremio').value
-
-      // TODO: CHECK HOW TO STORE THE CFDI FILE
-      // let cfdi = document.getElementById('cfdi').value
-      // console.log(cfdi)
       
       let tipos = document.getElementsByClassName('type-check')
       var tipo = []
@@ -134,8 +133,6 @@ export default {
 
       // CONVERT TO JSON
       let json = JSON.stringify(data)
-      // console.log(json)
-      
 
       this.$swal({
         title: "¿Estas seguro(a)?",
@@ -148,38 +145,109 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.updateDonor(json)
-          this.$swal({
-            title: '¡Agregado!',
-            text: 'El donador ha sido actualizado.',
-            icon: 'success',
-            confirmButtonText: 'Ok'
-          }).then((result)=>{
-            if(result.isConfirmed){                        
-              location.reload()
-            }
-          })
+          // this.$swal({
+          //   title: '¡Agregado!',
+          //   text: 'El donador ha sido actualizado.',
+          //   icon: 'success',
+          //   confirmButtonText: 'Ok'
+          // }).then((result)=>{
+          //   if(result.isConfirmed){                        
+          //     location.reload()
+          //   }
+          // })
         }
       })
     },
     updateDonor(data){
       console.log(data)
       try{
-        axios.put('http://localhost:3000/donor', data, {
+        // axios.put('http://localhost:3000/donor', data, {
+        axios.put(this.$hostname + '/donor', data, {
           headers: {
             'Content-Type': 'application/json'
           }
         })
         .then(response => {
           console.log(response)
+          if(response['data'][0][0].RESULT !== 'ERROR!'){
+            console.log(this.cfdi)
+            if(this.cfdi !== ''){
+              // UPLOAD CFDI
+              const formData = new FormData()
+              formData.append('file', this._cfdi)
+              console.log(formData)
+              try {
+                axios.post(this.$hostname + '/upload/' + this.idDonor, formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                })
+                .then(response => {
+                  console.log(response)
+
+                  this.$swal({
+                    title: '¡Agregado!',
+                    text: 'El donador ha sido actualizado.',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  }).then((result)=>{
+                    if(result.isConfirmed){                        
+                      location.reload()
+                    }
+                  })
+                })
+              } catch(error) {
+                console.log(error)
+              }
+            }
+            this.$swal({
+              title: '¡Agregado!',
+              text: 'El donador ha sido actualizado.',
+              icon: 'success',
+              confirmButtonText: 'Ok'
+            }).then((result)=>{
+              if(result.isConfirmed){                        
+                location.reload()
+              }
+            })
+          } else
+            this.$swal({
+              title: 'Oops!',
+              text: 'Hubo un error.',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            }).then((result)=>{
+              if(result.isConfirmed){                        
+                location.reload()
+              }
+            })
+
         })
       } catch (error) {
         console.log(error)
       }
+      return
     },
     validateEmail(mail){
       let validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       console.log(mail.match(validEmail))
       return mail.match(validEmail) ? false : true
+    },
+    handleFile(e){
+      this._cfdi = e.target.files[0]
+      console.log(this._cfdi.type)
+      if(this._cfdi.type !== 'application/pdf'){
+        this.$swal({
+          title: 'Error',
+          text: 'El archivo debe ser un PDF',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+        this.cfdi = ''
+        let inputFile = document.getElementById('cfdi')
+        inputFile.value = ''        
+        return
+      }
     }
 
   }
@@ -205,7 +273,7 @@ export default {
             <label class="form-label mt-2">Categoria</label>
             <CategoryDonor :category= donor.category_id />
             <label for="cfdi" class="form-label mt-2">CFDI</label>
-            <input type="file" class="form-control modalInputText" name="cfdi" id="cfdi" accept=".pdf">
+            <input type="file" class="form-control modalInputText" name="cfdi" id="cfdi" @change="handleFile($event)" accept=".pdf">
           </div>
         </form>
       </div>

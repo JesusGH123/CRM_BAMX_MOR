@@ -22,7 +22,8 @@ export default {
     methods: {
         deleteProduct(idProduct){
             try {
-                axios.delete('http://localhost:3000/product/' + idProduct)
+                // axios.delete('http://localhost:3000/product/' + idProduct)
+                axios.delete(this.$hostname + '/product/' + idProduct)
                 .then(response => {
                     console.log(response)
                 })
@@ -34,7 +35,8 @@ export default {
           if(this.filtered === true){
             let busqueda = document.getElementById("busqueda").value;
             try {
-                axios.get("http://localhost:3000/product/search/" + busqueda)
+                // axios.get("http://localhost:3000/product/search/" + busqueda)
+                axios.get(this.$hostname + "/product/search/" + busqueda)
                     .then(response => {
                     this.products = response.data[0];
                     // console.log(this.products)
@@ -46,7 +48,8 @@ export default {
           } else {
 
             try {
-                axios.get("http://localhost:3000/product")
+                // axios.get("http://localhost:3000/product")
+                axios.get(this.$hostname + "/product")
                     .then(response => {
                     this.products = response.data;
                 });

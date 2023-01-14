@@ -112,16 +112,48 @@ export default{
       })
     },
     async addDonor(data){
-      let result = ''
       try{
-        await axios.post('http://localhost:3000/donor', data, {
+        // await axios.post('http://localhost:3000/donor', data, {
+        await axios.post(this.$hostname + '/donor', data, {
           headers: {
             'Content-Type': 'application/json'
           }
         })
         .then(response => {
           console.log(response)
-          if( response['data'][0][0].RESULT === 'SUCCESS'){
+          if( response['data'][0][0].RESULT !== 'ERROR!'){
+            let id = response['data'][0][0].RESULT
+            if(this._cfdi !== ''){
+              // UPLOAD CFDI
+              const formData = new FormData()
+              formData.append('file', this._cfdi)
+              console.log(formData)
+              try {
+                axios.post(this.$hostname + '/upload/' + id, formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  }
+                })
+                .then(response => {
+                  console.log(response)
+
+                  this.$swal({
+                    title: '¡Agregado!',
+                    text: 'El donador ha sido agregado.',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  }).then((result)=>{
+                    if(result.isConfirmed){                        
+                      location.reload()
+                    }
+                  })
+                })
+              } catch(error) {
+                console.log(error)
+              }
+
+            }
+
             this.$swal({
               title: '¡Agregado!',
               text: 'El donador ha sido agregado.',
@@ -148,11 +180,23 @@ export default{
       } catch (error) {
         console.log(error)
       }
-      return result
+      return
     },
     handleFile(e){
       this._cfdi = e.target.files[0]
-      console.log(this._cfdi)
+      console.log(this._cfdi.type)
+      if(this._cfdi.type !== 'application/pdf'){
+        this.$swal({
+          title: 'Error',
+          text: 'El archivo debe ser un PDF',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+        this._cfdi = ''
+        let inputFile = document.getElementById('addDonorCfdi')
+        inputFile.value = ''        
+        return
+      }
     }
   },
   components:{

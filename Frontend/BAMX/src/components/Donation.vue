@@ -11,7 +11,8 @@ export default{
   data() {
     return {
       donations: {},
-      products: {}
+      products: {},
+      idProducts: [],
     }
   },
   mounted() {
@@ -21,7 +22,8 @@ export default{
   methods: {
     getProducts(){
       try{
-        axios.get('http://localhost:3000/product')
+        // axios.get('http://localhost:3000/product')
+        axios.get(this.$hostname + '/product')
         .then(response => {
           this.products = response.data
           // console.log(this.products)
@@ -32,9 +34,9 @@ export default{
     },
     deleteDonation(idDonation){
       console.log(idDonation)
-      // TODO: Delete donation
       try {
-        axios.delete('http://localhost:3000/donation/' + idDonation)
+        // axios.delete('http://localhost:3000/donation/' + idDonation)
+        axios.delete(this.$hostname + '/donation/' + idDonation)
         .then(response => {
           console.log(response)
         })
@@ -42,13 +44,20 @@ export default{
         console.log(error)
       }
     },
+    addIds(){
+      this.idProducts = []
+      for(let i = 0; i < this.donations.length; i++){
+        this.idProducts.push(this.donations[i].product_id)
+      }
+      // console.log(this.idProducts)
+    },
     getDonations() {
-      // TODO: Get donations
       try{
-        axios.get('http://localhost:3000/donation/' + this.idDonor)
+        // axios.get('http://localhost:3000/donation/' + this.idDonor)
+        axios.get(this.$hostname + '/donation/' + this.idDonor)
         .then(response => {
           this.donations = response.data
-          console.log(this.donations)
+          // console.log(this.donations)
           // console.log(this.idDonor)
         })
       } catch (error) {
@@ -113,7 +122,8 @@ export default{
     addDonation(id){
       event.preventDefault() // prevent form submit
       try {
-            axios.post('http://localhost:3000/donation/' + this.idDonor, {}, {
+            // axios.post('http://localhost:3000/donation/' + this.idDonor, {}, {
+            axios.post(this.$hostname + '/donation/' + this.idDonor, {}, {
               params: {
                 product_id: id,
                 donation_date: null,
@@ -137,6 +147,7 @@ export default{
 </script>
 
 <template>
+  {{ addIds() }}
   <form class="limited-form">
     <div v-for= "donation in donations" :key="donation.donation_id">
       <span v-for="product in products" :key="product.product_id">
@@ -170,12 +181,7 @@ export default{
             <select class="form-select" aria-label="Default select example" id="addProduct">
               <option selected>Selecciona un producto</option>
               <template v-for="product in products">
-                <template v-if="this.donations.length > 0" v-for="donation in donations">
-                  <option v-if="product.product_id !== donation.product_id" :value="product.product_id">{{capitalize(product.product_name)}}</option>
-                </template>
-                <template v-else>
-                  <option :value="product.product_id">{{capitalize(product.product_name)}}</option>
-                </template>
+                <option v-if="!this.idProducts.includes(product.product_id)" :value="product.product_id">{{capitalize(product.product_name)}}</option>
               </template>
             </select>
           </div>
