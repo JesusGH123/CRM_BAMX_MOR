@@ -19,6 +19,17 @@ module.exports.add_file = (request, response) => {
     })
 }
 
+//Export Donor info as CSV
+module.exports.export_csv = (request, response) => {
+    let sql = "CALL ExportCSV()"
+    connection.query(sql, null, (error, results, fields) => {
+        if(error) {
+            response.send(error)
+        }
+        response.download(results)
+    })
+}
+
 module.exports.get_file = (request, response) => {
     response.download('./uploads/' + request.params.file)
 }
