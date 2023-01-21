@@ -486,6 +486,24 @@ BEGIN
 END //
 DELIMITER ;
 
+-- Export CSV
+DROP PROCEDURE IF EXISTS ExportCSV;
+DELIMITER //
+CREATE PROCEDURE ExportCSV()
+BEGIN
+	SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_id) as 'Donations', GROUP_CONCAT(DISTINCT type_id) as "Tipo", category_id
+	FROM Donor 
+    LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
+    LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
+    LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+    GROUP BY (DC.donor_id)
+    INTO OUTFILE "C:/wamp/bin/mysql/mysql5.5.24/data/backup"
+	FIELDS ENCLOSED BY '"' 
+	TERMINATED BY ';' 
+	ESCAPED BY '"' 
+	LINES TERMINATED BY '\r\n';
+END //
+DELIMITER ;
 
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Bronce');
 INSERT INTO bamx.category (cat_id, cat_name) VALUES (0, 'Plata');

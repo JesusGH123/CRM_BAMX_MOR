@@ -29,5 +29,6 @@ const upload = multer({storage: storage})
 // router.get('/donor/:id', fileController.get_mails)
 router.post('/:id', upload.single('file'), fileController.add_file)
 router.get('/:file', fileController.get_file)
+router.get('/download', fileController.export_csv)
 
 module.exports = router
