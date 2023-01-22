@@ -145,16 +145,6 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           this.updateDonor(json)
-          // this.$swal({
-          //   title: '¡Agregado!',
-          //   text: 'El donador ha sido actualizado.',
-          //   icon: 'success',
-          //   confirmButtonText: 'Ok'
-          // }).then((result)=>{
-          //   if(result.isConfirmed){                        
-          //     location.reload()
-          //   }
-          // })
         }
       })
     },

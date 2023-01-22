@@ -491,17 +491,28 @@ DROP PROCEDURE IF EXISTS ExportCSV;
 DELIMITER //
 CREATE PROCEDURE ExportCSV()
 BEGIN
-	SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_id) as 'Donations', GROUP_CONCAT(DISTINCT type_id) as "Tipo", category_id
-	FROM Donor 
-    LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
-    LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
-    LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
-    GROUP BY (DC.donor_id)
-    INTO OUTFILE "C:/wamp/bin/mysql/mysql5.5.24/data/backup"
-	FIELDS ENCLOSED BY '"' 
-	TERMINATED BY ';' 
-	ESCAPED BY '"' 
-	LINES TERMINATED BY '\r\n';
+    DECLARE name VARCHAR(100);
+    DECLARE route VARCHAR(100);
+    DECLARE final_name VARCHAR(100);
+
+    SET name = CONCAT('users-',CURTIME() + 0,'.csv');
+    SET route = '\'C:/wamp64/tmp/';
+    SET final_name = CONCAT(route, name,'\'');
+    SET @get_csv = CONCAT('SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_id) as \'Donations\', GROUP_CONCAT(DISTINCT type_id) as "Tipo", category_id
+        FROM Donor
+        LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
+        LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
+        LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+        GROUP BY (DC.donor_id)
+        INTO OUTFILE ',
+            final_name,
+        ' FIELDS ENCLOSED BY \'"\'
+        TERMINATED BY \',\'
+        LINES TERMINATED BY \'\\r\\n\';');
+    SELECT name AS 'NAME';
+    PREPARE stmt FROM @get_csv;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
 END //
 DELIMITER ;
 
@@ -514,3 +525,6 @@ INSERT INTO bamx.type (type_id, type_name)  VALUES (0, 'Recurrente'),
                                                    (0, 'Por temporada'),
                                                    (0, 'Compra'),
                                                    (0, 'Prospecto');
+
+CALL ExportCSV();
+SELECT CURTIME() + 1;

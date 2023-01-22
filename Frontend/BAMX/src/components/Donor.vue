@@ -147,6 +147,9 @@ export default {
         },
         downloadFile(name){
           window.open(this.$hostname + "/upload/" + name, '_blank')
+        },
+        download_csv(){
+          window.open(this.$hostname + "/upload", '_blank')
         }
     }
 }
@@ -158,7 +161,7 @@ export default {
       <AddDonor />
     </div>
     <div class="col-7 d-flex justify-content-center">
-      <h1>{{ this.title }}</h1>
+      <h1 style="padding-left:15%">{{ this.title }}</h1>
     </div>
     <div class="col-3 d-flex justify-content-center align-items-center">
       <form style="margin-top: 10px;" autocomplete="off">
@@ -174,16 +177,21 @@ export default {
     <div class="col-3 d-flex justify-content-center align-items-center">
       <AddDonor />
     </div>
-    <div class="col-6"></div>
+    <div class="col-3"></div>
     <div class="col-3 d-flex justify-content-center align-items-center">
       <form style="margin-top: 10px;" autocomplete="off">
         <input autocomplete="false" hidden type="text" style="display:none;">
         <input type="text" placeholder="Buscar" id="busqueda" >
-        <button class="btn search_btn" style="margin-left: 10px;">
+        <button class="btn search_btn" style="margin-left: 10px;" @click="filterDonors">
           <img src="../assets/search.png" alt="search_icon" width="16" height="16" style="padding:0; margin:0;">
         </button>
       </form>
     </div>
+  </div>
+  <div class="row">
+    <button class="btn btn-info ms-2" @click="download_csv">
+      <img src="../assets/export-csv/icons8-export-csv-24.png" alt="download_csv" style="padding:0; margin:0;">
+    </button>
   </div>
   <table style="width:100%">
   <thead>
