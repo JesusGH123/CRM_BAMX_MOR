@@ -498,11 +498,14 @@ BEGIN
     SET name = CONCAT('users-',CURTIME() + 0,'.csv');
     SET route = '\'C:/wamp64/tmp/';
     SET final_name = CONCAT(route, name,'\'');
-    SET @get_csv = CONCAT('SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_id) as \'Donations\', GROUP_CONCAT(DISTINCT type_id) as "Tipo", category_id
+    SET @get_csv = CONCAT('SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_name) AS "Productos", GROUP_CONCAT(DISTINCT type_name) AS "Tipo", cat_name
         FROM Donor
         LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
         LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
         LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+        LEFT JOIN Product p on DP.product_id = p.product_id
+        LEFT JOIN Type T on DT.type_id = T.type_id
+        LEFT JOIN Category C on DC.category_id = C.cat_id
         GROUP BY (DC.donor_id)
         INTO OUTFILE ',
             final_name,
@@ -530,3 +533,20 @@ CALL ExportCSV();
 SELECT CURTIME() + 1;
 
 SELECT VERSION();
+
+SELECT * FROM Donor;
+INSERT INTO DonorType VALUES (1, 1);
+
+SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_name) AS "Productos", GROUP_CONCAT(DISTINCT type_name) AS "Tipo", cat_name, GROUP_CONCAT(DISTINCT donor_phone)
+        FROM Donor
+        LEFT JOIN DonorCategory DC ON Donor.donor_id = DC.donor_id
+        LEFT JOIN DonorType DT on Donor.donor_id = DT.donor_id
+        LEFT JOIN DonorProduct DP ON Donor.donor_id = DP.donor_id
+        LEFT JOIN Product p on DP.product_id = p.product_id
+        LEFT JOIN Type T on DT.type_id = T.type_id
+        LEFT JOIN Category C on DC.category_id = C.cat_id
+        LEFT JOIN DonorPhone D on Donor.donor_id = D.donor_id
+        GROUP BY (DC.donor_id);
+SELECT * FROM Category;
+SELECT * FROM DonorProduct;
+SELECT * FROM DonorPhone;

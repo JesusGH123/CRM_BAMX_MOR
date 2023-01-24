@@ -188,10 +188,13 @@ export default {
       </form>
     </div>
   </div>
-  <div class="row">
-    <button class="btn btn-info ms-2" @click="download_csv">
-      <img src="../assets/export-csv/icons8-export-csv-24.png" alt="download_csv" style="padding:0; margin:0;">
-    </button>
+  <div class="row d-flex">
+    <div class="col-11"></div>
+    <div class="col-1 align-content-end justify-content-end">
+      <button class="btn btn-info btn-csv ms-2" @click="download_csv">
+        <img src="../assets/export-csv/icons8-export-csv-24.png" alt="download_csv">
+      </button>
+    </div>
   </div>
   <table style="width:100%">
   <thead>
@@ -288,6 +291,10 @@ input[type=number]{
   padding: 5px 10px;
   min-height: 42px;
   max-height: 42px;
+}
+
+.btn-csv{
+  width: 70px;
 }
 
 .search_btn{
