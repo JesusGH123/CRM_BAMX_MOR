@@ -528,3 +528,5 @@ INSERT INTO bamx.type (type_id, type_name)  VALUES (0, 'Recurrente'),
 
 CALL ExportCSV();
 SELECT CURTIME() + 1;
+
+SELECT VERSION();
