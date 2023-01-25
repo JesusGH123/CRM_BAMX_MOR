@@ -11,7 +11,7 @@ export default {
             categorias: {},
             types: {},
             products: {},
-            filtered: Boolean
+            filtered: false,
         };
     },
     props: {
@@ -69,41 +69,37 @@ export default {
             }
         },
         getDonors() {
-          if(this.filtered === true){
-            let search = document.getElementById("busqueda").value
             try {
-                // axios.get("http://localhost:3000/donorFiltered", {
-                axios.get(this.$hostname + "/donorFiltered", {
-                    params: {
-                        search: search
-                    }})
-                    .then(response => {
-                    this.filteredDonors = response.data[0];
-                    // console.log(this.filteredDonors)
-                    let ids = this.filteredDonors.map(donor => donor.donor_id)
-                    // console.log(ids)
-
-                    this.donors = this.donors.filter(donor => ids.includes(donor.donor_id))
-                    // console.log(this.donors)                    
-                });
-            }
-            catch (error) {
-                console.log(error);
-            }
-            return
-          } else {
-            try {
-                // axios.get("http://localhost:3000/")
                 axios.get(this.$hostname)
                     .then(response => {
-                    this.donors = response.data[0];
+                    this.donors = response.data[0];       
+                    if(this.filtered === true){
+                      let search = document.getElementById("busqueda").value
+                      try {
+                          // axios.get("http://localhost:3000/donorFiltered", {
+                          axios.get(this.$hostname + "/donorFiltered", {
+                              params: {
+                                  search: search
+                              }})
+                              .then(response => {
+                              this.filteredDonors = response.data[0];
+                              // console.log(this.filteredDonors)
+                              let ids = this.filteredDonors.map(donor => donor.donor_id)
+                              // console.log(ids)
+                              this.donors = this.donors.filter(donor => ids.includes(donor.donor_id))
+                              // console.log(this.donors)                    
+                          });
+                      }
+                      catch (error) {
+                          console.log(error);
+                      }
+                    }
                 });
             }
             catch (error) {
                 console.log(error);
             }
-          }
-        },
+          },
         deleteAlert(id) {
             this.$swal({
                 title: "¿Estas segur(a)?",

@@ -28,7 +28,7 @@ app.use('/donation', donations)
 app.use('/mail', mails)
 app.use('/product', products)
 app.use('/unit', units)
-app.use('/phone', phones)
+app.use('/phone', phones) 
 app.use('/types', types)
 app.use('/categories', categories)
 

@@ -144,7 +144,7 @@ export default{
     <div v-for= "(phone, index) in phones" :key="phone.phone_id">
       <label for="phone" class="form-label">Tel&eacute;fono {{index + 1}}</label>
       <div class="input-group">
-        <input class="form-control mb-3" type="text" @keypress="validate($event)" maxlength="10" name="phone" id="phone" :value="phone.donor_phone">
+        <input class="form-control mb-3" type="text" @keypress="validate($event)" maxlength="10" name="phone" id="phone" :value="phone.donor_phone" disabled>
         <button class="btn btn-outline-secondary delete-form" type="button" name="id" :id="phone.phone_id" @click="deleteAlert(phone.phone_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
       </div>
     </div>

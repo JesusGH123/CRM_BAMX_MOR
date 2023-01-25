@@ -32,32 +32,31 @@ export default {
             }
         },
         getProducts() {
-          if(this.filtered === true){
-            let busqueda = document.getElementById("busqueda").value;
-            try {
-                // axios.get("http://localhost:3000/product/search/" + busqueda)
-                axios.get(this.$hostname + "/product/search/" + busqueda)
-                    .then(response => {
-                    this.products = response.data[0];
-                    // console.log(this.products)
-                });
-            }
-            catch (error) {
-                console.log(error);
-            }
-          } else {
-
             try {
                 // axios.get("http://localhost:3000/product")
                 axios.get(this.$hostname + "/product")
                     .then(response => {
                     this.products = response.data;
+
+                    if(this.filtered === true){
+                      let busqueda = document.getElementById("busqueda").value;
+                      try {
+                          // axios.get("http://localhost:3000/product/search/" + busqueda)
+                          axios.get(this.$hostname + "/product/search/" + busqueda)
+                              .then(response => {
+                              this.products = response.data[0];
+                              // console.log(this.products)
+                          });
+                      }
+                      catch (error) {
+                          console.log(error);
+                      }
+                    }
                 });
             }
             catch (error) {
                 console.log(error);
             }
-          }
         },
         deleteAlert(id) {
             this.$swal({
@@ -140,7 +139,7 @@ export default {
     <thead>
       <tr>
         <th>Nombre</th>
-        <th>Eliminar</th>
+        <!-- <th>Eliminar</th> -->
       </tr>
     </thead>
     <tbody>
@@ -148,9 +147,9 @@ export default {
         <td>
           {{ capitalize(product.product_name) }}
         </td>
-        <td>
+        <!-- <td>
           <button class="btn delete" :id="'product_'+product.product_id" @click="deleteAlert(product.product_id)"><img src="../assets/trash.png" title="deleteImage" width="16" height="16"/></button>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>

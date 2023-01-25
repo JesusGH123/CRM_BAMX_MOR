@@ -27,4 +27,4 @@ coverage
 *.sln
 *.sw?
 
-Middleware/uploads/
+Middleware/uploads/*.pdf
