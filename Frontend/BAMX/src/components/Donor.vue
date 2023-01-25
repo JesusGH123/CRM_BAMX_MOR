@@ -188,6 +188,7 @@ export default {
     <div class="col-11"></div>
     <div class="col-1 align-content-end justify-content-end">
       <button class="btn btn-info btn-csv ms-2" @click="download_csv">
+        Exportar
         <img src="../assets/export-csv/icons8-export-csv-24.png" alt="download_csv">
       </button>
     </div>
@@ -290,7 +291,7 @@ input[type=number]{
 }
 
 .btn-csv{
-  width: 70px;
+  width: 110px;
 }
 
 .search_btn{

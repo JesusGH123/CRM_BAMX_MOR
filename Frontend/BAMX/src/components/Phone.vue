@@ -171,6 +171,9 @@ export default{
             <input type="text" @keypress="validate($event)" maxlength="10" class="form-control" id="addPhoneNumber" name="phone" placeholder="Tel&eacute;fono">
           </div>
         </form>
+        <ul>
+          <li>El t&eacute;lefono debe contener 10 digitos &uacute;nicamente</li>
+        </ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>

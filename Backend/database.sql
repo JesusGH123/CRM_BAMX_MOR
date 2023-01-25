@@ -550,3 +550,4 @@ SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization,
 SELECT * FROM Category;
 SELECT * FROM DonorProduct;
 SELECT * FROM DonorPhone;
+SELECT * FROM Donor
