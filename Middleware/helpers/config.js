@@ -1,7 +1,7 @@
 let config = {
-    host: "localhost",
-    user: "root",
-    password: "",
+    host: "database-bamx.ck1m4vke1vmz.us-east-1.rds.amazonaws.com",
+    user: "BAMX",
+    password: "badealmex",
     database: 'BAMX'
   }
   
