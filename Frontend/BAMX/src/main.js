@@ -12,7 +12,7 @@ import './assets/main.css'
 const app = createApp(App)
 
 // CHANGE THIS TO YOUR BACKEND SERVER
-app.config.globalProperties.$hostname = 'http://localhost:3000'
+app.config.globalProperties.$hostname = 'http://100.26.234.87:3000'
 
 app.use(VueSweetAlert2)
 app.use(router)
