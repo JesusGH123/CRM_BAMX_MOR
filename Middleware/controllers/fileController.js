@@ -26,10 +26,10 @@ module.exports.export_csv = (request, response) => {
         }
         let name = results[0][0].NAME
         // TODO: CHANGE PATH IN PRODUCTION
-        response.download('C:/wamp64/tmp/' + name)
+        response.download('/home/ubuntu/temp/csv-docs' + name)
     })
 }
 
 module.exports.get_file = (request, response) => {
-    response.download('./uploads/' + request.params.file)
+    response.download('/home/ubuntu/temp/cfdi-docs' + request.params.file)
 }

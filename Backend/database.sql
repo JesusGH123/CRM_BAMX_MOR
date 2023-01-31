@@ -496,7 +496,7 @@ BEGIN
     DECLARE final_name VARCHAR(100);
 
     SET name = CONCAT('users-',CURTIME() + 0,'.csv');
-    SET route = '\'C:/wamp64/tmp/';
+    SET route = '\'';
     SET final_name = CONCAT(route, name,'\'');
     SET @get_csv = CONCAT('SELECT Donor.donor_id, donor_name, donor_city, donor_colony, donor_organization, donor_website1, donor_website2, donor_cfdi, GROUP_CONCAT(DISTINCT product_name) AS "Productos", GROUP_CONCAT(DISTINCT type_name) AS "Tipo", cat_name
         FROM Donor
