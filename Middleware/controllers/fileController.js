@@ -31,5 +31,5 @@ module.exports.export_csv = (request, response) => {
 }
 
 module.exports.get_file = (request, response) => {
-    response.download('/home/ubuntu/temp/cfdi-docs' + request.params.file)
+    response.download('/home/ubuntu/temp/cfdi-docs/' + request.params.file)
 }
