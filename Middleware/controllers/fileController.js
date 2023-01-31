@@ -26,7 +26,7 @@ module.exports.export_csv = (request, response) => {
         }
         let name = results[0][0].NAME
         // TODO: CHANGE PATH IN PRODUCTION
-        response.download('/home/ubuntu/temp/csv-docs' + name)
+        response.download('/home/ubuntu/temp/csv-docs/' + name)
     })
 }
 
